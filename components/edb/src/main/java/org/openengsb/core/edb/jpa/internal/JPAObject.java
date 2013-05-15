@@ -23,12 +23,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
 import org.apache.openjpa.persistence.jdbc.Index;
 
 @SuppressWarnings("serial")
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 /**
  * this defines a jpa object in the database. The correlation to the EDBObject is that
  * the JPAObject can be converted to an EDBObject through the EDBUtils class.

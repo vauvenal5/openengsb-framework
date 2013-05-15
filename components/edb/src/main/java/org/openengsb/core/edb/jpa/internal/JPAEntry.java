@@ -19,6 +19,8 @@ package org.openengsb.core.edb.jpa.internal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import org.apache.openjpa.persistence.jdbc.Index;
 import org.openengsb.core.edb.api.EDBObjectEntry;
@@ -29,6 +31,7 @@ import org.openengsb.core.edb.api.EDBObjectEntry;
  */
 @SuppressWarnings("serial")
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class JPAEntry extends VersionedEntity {
     @Index
     @Column(name = "KEY")
