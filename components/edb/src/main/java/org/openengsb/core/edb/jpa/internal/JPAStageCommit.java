@@ -13,15 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openengsb.core.edb.api;
+package org.openengsb.core.edb.jpa.internal;
+
+import javax.persistence.Column;
+import org.openengsb.core.edb.api.EDBStageCommit;
 
 /**
  *
- * 
+ * @author vauve_000
  */
-public interface EDBStageCommit extends EDBCommit {
+public class JPAStageCommit extends JPACommit implements EDBStageCommit{
+
+	@Column(name="STAGEID")
+	private String stageId;
 	
-	public String getStageId();
+	public JPAStageCommit(String committer, String contextId) {
+		super(committer, contextId);
+	}
 	
-	public void setStageId(String stageId);
+	@Override
+	public String getStageId() {
+		return this.stageId;
+	}
+
+	@Override
+	public void setStageId(String stageId) {
+		this.stageId = stageId;
+	}
+	
 }
