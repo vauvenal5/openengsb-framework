@@ -29,6 +29,7 @@ import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
 import org.openengsb.core.edb.api.hooks.EDBPostCommitHook;
@@ -248,6 +249,20 @@ public class EDBService extends AbstractEDBService {
         commit.setHeadRevisionNumber(getCurrentRevisionNumber());
         return commit;
     }
+	
+	@Override
+	public EDBStageCommit createEDBStageCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
+		throws EDBException {
+		String committer = getAuthenticatedUser();
+        String contextId = getActualContextId();
+        JPAStageCommit commit = new JPAStageCommit(committer, contextId);
+        getLogger().debug("creating staged commit for committer {} with contextId {}", committer, contextId);
+        commit.insertAll(inserts);
+        commit.updateAll(updates);
+        commit.deleteAll(deletes);
+        commit.setHeadRevisionNumber(getCurrentRevisionNumber());
+        return commit;
+	}
 
     /**
      * Returns the actual authenticated user.

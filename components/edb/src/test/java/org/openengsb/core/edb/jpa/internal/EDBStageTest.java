@@ -15,15 +15,40 @@
  */
 package org.openengsb.core.edb.jpa.internal;
 
+import java.util.Date;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import org.junit.Test;
+import org.openengsb.core.edb.api.EDBStage;
+import org.openengsb.core.edb.api.EDBStageCommit;
+import org.openengsb.core.edb.api.EDBStageObject;
 
 public class EDBStageTest extends AbstractEDBTest
 {
 	@Test
 	public void testPersistStageObject_shouldWork()
 	{
+		String creator = "Svetoslav";
+		String stageId = "stagePersistenceTest";
+		Long dateTime = (new Date()).getTime();
+		
+		String objectId = "stagedInsertedObject";
+		
+		EDBStage stage = new JPAStage();
+		stage.setCreator(creator);
+		stage.setStageId(stageId);
+		stage.setTimeStamp(dateTime);
+		
+		EDBStageCommit commit = this.getEDBStageCommit();
+		commit.setStage(stage);
+		
+		EDBStageObject object = new EDBStageObject(stageId, objectId);
+		
+		commit.insert(object);
+		
+		db.commit(commit);
+		
+		//todo: take closer look on EDBService
 		assertThat(false, is(true));
 	}
 }

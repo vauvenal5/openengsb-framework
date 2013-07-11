@@ -16,7 +16,10 @@
 package org.openengsb.core.edb.jpa.internal;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
+import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -24,21 +27,21 @@ import org.openengsb.core.edb.api.EDBStageCommit;
  */
 public class JPAStageCommit extends JPACommit implements EDBStageCommit{
 
-	@Column(name="STAGEID")
-	private String stageId;
+	@ManyToOne(fetch= FetchType.LAZY)
+	private EDBStage stage;
 	
 	public JPAStageCommit(String committer, String contextId) {
 		super(committer, contextId);
 	}
 	
 	@Override
-	public String getStageId() {
-		return this.stageId;
+	public EDBStage getStage() {
+		return this.stage;
 	}
 
 	@Override
-	public void setStageId(String stageId) {
-		this.stageId = stageId;
+	public void setStage(EDBStage stage) {
+		this.stage = stage;
 	}
 	
 }

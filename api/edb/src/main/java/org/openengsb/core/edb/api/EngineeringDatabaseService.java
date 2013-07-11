@@ -134,6 +134,9 @@ public interface EngineeringDatabaseService {
      */
     EDBCommit createEDBCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
         throws EDBException;
+	
+	public EDBStageCommit createEDBStageCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
+		throws EDBException;
     
     /**
      * Returns the revision of the current state of the EDB.

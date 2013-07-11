@@ -21,7 +21,7 @@ package org.openengsb.core.edb.api;
  */
 public interface EDBStageCommit extends EDBCommit {
 	
-	public String getStageId();
+	public EDBStage getStage();
 	
-	public void setStageId(String stageId);
+	public void setStage(EDBStage stage);
 }
