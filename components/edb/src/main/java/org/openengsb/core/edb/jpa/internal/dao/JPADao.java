@@ -107,7 +107,7 @@ public interface JPADao {
      */
     JPACommit getLastCommit(Map<String, Object> param) throws EDBException;
 	
-	JPAStageCommit getLastStagedCommit(Map<String, Object> param) throws EDBException;
+	JPAStageCommit getLastStagedCommit(Map<String, Object> param, String sid) throws EDBException;
     
     /**
      * Returns a list of JPAObjects which have all JPAEntries with the given keys and values.

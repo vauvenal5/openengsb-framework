@@ -184,9 +184,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public JPAStageCommit getLastStagedCommit(Map<String, Object> param) throws EDBException
+	public JPAStageCommit getLastStagedCommit(Map<String, Object> param, String sid) throws EDBException
 	{
-		return super.getLastCommit(JPAStageCommit.class, param, null);
+		return super.getLastCommit(JPAStageCommit.class, param, sid);
 	}
 
     @Override
