@@ -20,22 +20,22 @@ package org.openengsb.core.edb.jpa.internal;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
 
-public class LogEntry implements EDBLogEntry {
-    private JPACommit commit;
-    private EDBObject object;
+public class LogEntry<J extends JPACommit, E extends EDBObject> implements EDBLogEntry {
+    private J commit;
+    private E object;
 
-    public LogEntry(JPACommit c, EDBObject obj) {
+    public LogEntry(J c, E obj) {
         this.commit = c;
         this.object = obj;
     }
 
     @Override
-    public JPACommit getCommit() {
+    public J getCommit() {
         return commit;
     }
 
     @Override
-    public EDBObject getObject() {
+    public E getObject() {
         return object;
     }
 }
