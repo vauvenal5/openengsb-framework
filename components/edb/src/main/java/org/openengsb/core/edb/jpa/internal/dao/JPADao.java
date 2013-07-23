@@ -79,7 +79,7 @@ public interface JPADao {
      */
     List<JPACommit> getJPACommit(String oid, long from, long to) throws EDBException;
 	
-	List<JPAStageCommit> getJPACommit(String oid, String sid, long from, long to) throws EDBException;
+	List<JPAStageCommit> getStagedJPACommit(String oid, String sid, long from, long to) throws EDBException;
     
     /**
      * Returns a list of oids from the JPAObjects which has been resurrected
