@@ -17,25 +17,28 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
+import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStageCommit;
+import org.openengsb.core.edb.api.EDBStageObject;
 
-public class LogEntry<J extends JPACommit, E extends EDBObject> implements EDBLogEntry {
-    private J commit;
-    private E object;
+public class LogEntry<C extends EDBCommit, O extends EDBObject> implements EDBLogEntry<C, O> {
+    private C commit;
+    private O object;
 
-    public LogEntry(J c, E obj) {
+    public LogEntry(C c, O obj) {
         this.commit = c;
         this.object = obj;
     }
 
     @Override
-    public J getCommit() {
+    public C getCommit() {
         return commit;
     }
 
     @Override
-    public E getObject() {
+    public O getObject() {
         return object;
     }
 }
