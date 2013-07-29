@@ -152,9 +152,20 @@ public class EDBService extends AbstractEDBService {
     }
     
     @Override
-    public List<EDBLogEntry> getLog(String oid, String sid, Long from, Long to) throws EDBException{
-        //TODO paul
-        throw new UnsupportedOperationException();
+    public List<EDBLogEntry<EDBStageCommit, EDBStageObject>> getLog(String oid, String sid, Long from, Long to) throws EDBException{
+        getLogger().debug("loading the log of JPAObject with the oid {}, sid {} from timestamp {} to {}", new Object[]{oid, sid, from, to});
+        List<EDBStageObject> history = getStagedHistoryForTimeRange(oid, sid, from, to);
+        List<JPAStageCommit> commits = dao.getStagedJPACommit(oid, sid, from, to);
+        
+         if (history.size() != commits.size()) {
+            throw new EDBException("inconsistent log " + Integer.toString(commits.size()) + " staged commits for "
+                    + Integer.toString(history.size()) + " staged history entries");
+        }
+        List<EDBLogEntry<EDBStageCommit, EDBStageObject>> log = new ArrayList<EDBLogEntry<EDBStageCommit, EDBStageObject>>();
+        for (int i = 0; i < history.size(); ++i) {
+            log.add(new LogEntry<EDBStageCommit, EDBStageObject>(commits.get(i), history.get(i)));
+        }
+        return log;
     }
 
     @Override
@@ -165,7 +176,6 @@ public class EDBService extends AbstractEDBService {
     @Override
     public List<EDBStageObject> getStageHead(String sid) throws EDBException {
         throw new UnsupportedOperationException();
-        
         //return dao.getStagedJPAHead(System.currentTimeMillis(), sid).getStagedEDBObjects();
     }
 
