@@ -89,7 +89,7 @@ public class EDBService extends AbstractEDBService {
     public EDBStageObject getStagedObject(String oid, String sid) throws EDBException {
         getLogger().debug("loading newest JPAObject with the oid {} and sid {}", new Object[]{oid, sid});
         JPAStageObject temp = dao.getStagedJPAObject(oid,sid);
-        return EDBUtils.convertJPAStageObjectToEDBStageObject(temp);
+		return EDBUtils.convertJPAObjectToEDBObject(temp);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class EDBService extends AbstractEDBService {
     @Override
     public List<EDBStageObject> getStagedObjects(List<String> oids, String sid) throws EDBException {
         List<JPAStageObject> objects = dao.getStagedJPAObjects(oids, sid);
-        return EDBUtils.convertJPAStageObjectsToEDBStageObjects(objects);
+        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class EDBService extends AbstractEDBService {
     public List<EDBStageObject> getStagedHistory(String oid, String sid) throws EDBException {
         getLogger().debug("loading history of JPAStageObject with the oid {} and sid {}", new Object[]{oid,sid});
         List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid);
-        return EDBUtils.convertJPAStageObjectsToEDBStageObjects(objects);
+        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class EDBService extends AbstractEDBService {
          getLogger().debug("loading JPAObject with the oid {} and sid {} from "
                 + "the timestamp {} to the timestamp {}", new Object[]{ oid, sid, from, to });
         List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid, from, to);
-        return EDBUtils.convertJPAStageObjectsToEDBStageObjects(objects);
+        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
     
     @Override
@@ -220,7 +220,7 @@ public class EDBService extends AbstractEDBService {
     @Override
     public List<EDBStageObject> queryStageByMap(String sid, Map<String, Object> query) throws EDBException {
         try {
-            return EDBUtils.convertJPAStageObjectsToEDBStageObjects(dao.queryStaged(query, sid));
+            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid));
         } catch (Exception ex) {
             throw new EDBException("failed to query for objects with given map and stage", ex);
         }
@@ -238,7 +238,7 @@ public class EDBService extends AbstractEDBService {
     @Override
     public List<EDBStageObject> queryStage(String sid, Map<String, Object> query, Long timestamp) throws EDBException {
         try{
-            return EDBUtils.convertJPAStageObjectsToEDBStageObjects(dao.queryStaged(query, sid, timestamp));
+            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid, timestamp));
          } catch (Exception ex) {
             throw new EDBException("failed to query for objects with the given map, stage, timestamp", ex);
         }

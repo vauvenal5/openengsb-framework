@@ -29,7 +29,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
+import org.openengsb.core.edb.jpa.internal.JPAObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,12 +127,12 @@ public abstract class AbstractJPADao
         }
 	}
 	
-	protected <T> JPAHead getJPAHead(Class<T> type, String sid, long timestamp) throws EDBException {
+	protected <J extends JPAObject, E extends EDBObject> JPAHead getJPAHead(Class<J> type, String sid, long timestamp) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading head for timestamp {}", timestamp);
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<T> query = criteriaBuilder.createQuery(type);
-            Root<T> from = query.from(type);
+            CriteriaQuery<J> query = criteriaBuilder.createQuery(type);
+            Root<J> from = query.from(type);
 
             query.select(from);
 
@@ -145,10 +147,10 @@ public abstract class AbstractJPADao
             Predicate predicate2 = criteriaBuilder.notEqual(from.get("isDeleted"), Boolean.TRUE);
             query.where(checkSid(criteriaBuilder, from, sid, criteriaBuilder.and(predicate1, predicate2)));
 
-            TypedQuery<T> typedQuery = entityManager.createQuery(query);
-            List<T> resultList = typedQuery.getResultList();
+            TypedQuery<J> typedQuery = entityManager.createQuery(query);
+            List<J> resultList = typedQuery.getResultList();
 
-            JPAHead head = new JPAHead();
+            JPAHead<J, E> head = new JPAHead();
             head.setJPAObjects(resultList);
             head.setTimestamp(timestamp);
             return head;

@@ -23,8 +23,12 @@ import java.util.List;
 
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBObjectEntry;
+import org.openengsb.core.edb.api.EDBStageObject;
+import org.openengsb.core.edb.api.EDBStageObjectEntry;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
+import org.openengsb.core.edb.jpa.internal.JPAStageEntry;
+import org.openengsb.core.edb.jpa.internal.JPAStageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +59,10 @@ public final class EDBUtils {
         LOGGER.error("No EDBConverterStep fit for JPAEntry {}", entry);
         return null;
     }
+	
+	public static EDBStageObjectEntry convertJPAEntryToEDBObjectEntry(JPAStageEntry entry) {
+		return null;
+	}
 
     /**
      * Converts a JPAEntry object into an EDBObjectEntry.
@@ -83,6 +91,10 @@ public final class EDBUtils {
         result.updateTimestamp(object.getTimestamp());
         return result;
     }
+	
+	 public static EDBStageObject convertJPAObjectToEDBObject(JPAStageObject object) {
+		 return null;
+	 }
 
     /**
      * Converts an EDBObject object into a JPAObject object.
@@ -114,10 +126,10 @@ public final class EDBUtils {
     /**
      * Converts a list of JPAObjects into a list of EDBObjects
      */
-    public static List<EDBObject> convertJPAObjectsToEDBObjects(List<JPAObject> objects) {
-        List<EDBObject> result = new ArrayList<EDBObject>();
-        for (JPAObject object : objects) {
-            result.add(convertJPAObjectToEDBObject(object));
+    public static <E extends EDBObject, J extends JPAObject> List<E> convertJPAObjectsToEDBObjects(List<J> objects) {
+        List<E> result = new ArrayList<E>();
+        for (J object : objects) {
+            result.add((E)convertJPAObjectToEDBObject(object));
         }
         return result;
     }

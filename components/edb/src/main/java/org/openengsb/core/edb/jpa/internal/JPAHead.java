@@ -25,19 +25,19 @@ import org.openengsb.core.edb.jpa.internal.util.EDBUtils;
 /**
  * A JPA Head contains all JPAObjects which are bound to a specific timestamp.
  */
-public class JPAHead {
-    private List<JPAObject> objects;
+public class JPAHead<J extends JPAObject, E extends EDBObject> {
+    private List<J> objects;
     private Long timestamp;
     
-    public List<EDBObject> getEDBObjects() {
+    public List<E> getEDBObjects() {
         return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
     
-    public void setJPAObjects(List<JPAObject> objects) {
+    public void setJPAObjects(List<J> objects) {
         this.objects = objects;
     }
 
-    public List<JPAObject> getJPAObjects() {
+    public List<J> getJPAObjects() {
         return objects;
     }
     
