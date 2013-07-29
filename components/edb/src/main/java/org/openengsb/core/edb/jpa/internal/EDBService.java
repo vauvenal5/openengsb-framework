@@ -152,7 +152,7 @@ public class EDBService extends AbstractEDBService {
     }
     
     @Override
-    public List<EDBLogEntry<EDBStageCommit, EDBStageObject>> getLog(String oid, String sid, Long from, Long to) throws EDBException{
+    public List<EDBLogEntry> getLog(String oid, String sid, Long from, Long to) throws EDBException{
         getLogger().debug("loading the log of JPAObject with the oid {}, sid {} from timestamp {} to {}", new Object[]{oid, sid, from, to});
         List<EDBStageObject> history = getStagedHistoryForTimeRange(oid, sid, from, to);
         List<JPAStageCommit> commits = dao.getStagedJPACommit(oid, sid, from, to);
@@ -161,7 +161,7 @@ public class EDBService extends AbstractEDBService {
             throw new EDBException("inconsistent log " + Integer.toString(commits.size()) + " staged commits for "
                     + Integer.toString(history.size()) + " staged history entries");
         }
-        List<EDBLogEntry<EDBStageCommit, EDBStageObject>> log = new ArrayList<EDBLogEntry<EDBStageCommit, EDBStageObject>>();
+        List<EDBLogEntry> log = new ArrayList<EDBLogEntry>();
         for (int i = 0; i < history.size(); ++i) {
             log.add(new LogEntry<EDBStageCommit, EDBStageObject>(commits.get(i), history.get(i)));
         }
@@ -400,7 +400,7 @@ public class EDBService extends AbstractEDBService {
     public List<EDBStageObject> getStagedStateOfLastCommitMatchingByKeyValue(String key, Object value, String sid) throws EDBException {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(key, value);
-        return getStagedStateOfLastCommitMatchingByKeyValue(key, value, sid);
+        return getStagedStateOfLastCommitMatching(query, sid);
     }
 
     @Override

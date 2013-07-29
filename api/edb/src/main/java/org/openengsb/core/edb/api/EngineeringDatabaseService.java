@@ -71,7 +71,7 @@ public interface EngineeringDatabaseService {
      */
     List<EDBLogEntry> getLog(String oid, Long from, Long to) throws EDBException;
 	
-	List<EDBLogEntry<EDBStageCommit, EDBStageObject>> getLog(String oid, String sid, Long from, Long to) throws EDBException;
+	List<EDBLogEntry> getLog(String oid, String sid, Long from, Long to) throws EDBException;
 
     /**
      * Retrieve the full state for a provided timestamp. Note, there need not exist a commit for this exact timestamp.
