@@ -17,17 +17,9 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-
-import org.apache.openjpa.persistence.jdbc.Index;
 
 @SuppressWarnings("serial")
 @Entity
@@ -36,50 +28,8 @@ import org.apache.openjpa.persistence.jdbc.Index;
  * this defines a jpa object in the database. The correlation to the EDBObject is that
  * the JPAObject can be converted to an EDBObject through the EDBUtils class.
  */
-public class JPAObject extends VersionedEntity {
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<JPAEntry> entries;
-    @Column(name = "TIME")
-    private Long timestamp;
-    @Column(name = "ISDELETED")
-    private Boolean isDeleted;
-    @Index
-    @Column(name = "OID")
-    private String oid;
-
-    public JPAObject() {
-        isDeleted = false;
-    }
-    
-    public List<JPAEntry> getEntries() {
-        return entries;
-    }
-    
-    public void setEntries(List<JPAEntry> entries) {
-        this.entries = entries;
-    }
-
-    public Boolean isDeleted() {
-        return isDeleted;
-    }
-    
-    public void setDeleted(Boolean deleted) {
-        this.isDeleted = deleted;
-    }
-
-    public Long getTimestamp() {
-        return timestamp;
-    }
-    
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getOID() {
-        return oid;
-    }
-
-    public void setOID(String oid) {
-        this.oid = oid;
+public class JPAObject extends JPABaseObject<JPAEntry> {
+    public JPAObject(){
+        super();
     }
 }
