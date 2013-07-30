@@ -24,6 +24,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
@@ -37,184 +38,17 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class JPACommit extends VersionedEntity implements EDBCommit {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JPACommit.class);
+public class JPACommit extends JPABaseCommit<EDBObject> implements EDBCommit {
 
-    @Column(name = "COMMITER", length = 50)
-    private String committer;
-    @Column(name = "TIME")
-    private Long timestamp;
-    @Column(name = "CONTEXT", length = 50)
-    private String context;
-    @Column(name = "DELS")
-    @ElementCollection
-    private List<String> deletions;
-    @Column(name = "OIDS")
-    @ElementCollection
-    private List<String> oids;
-    @Column(name = "ISCOMMITED")
-    private Boolean committed = false;
-    @Column(name = "REVISION")
-    private String revision;
-    @Column(name = "PARENT")
-    private String parent;
-
-    private List<EDBObject> objects;
-
-    @Transient
-    private List<EDBObject> inserts;
-    @Transient
-    private List<EDBObject> updates;
-    
-    /**
+	/**
      * the empty constructor is only for the jpa enhancer. Do not use it in real code.
      */
     @Deprecated
-    public JPACommit() {
-    }
-
-    public JPACommit(String committer, String contextId) {
-        this.committer = committer;
-        this.context = contextId;
-
-        oids = new ArrayList<String>();
-        deletions = new ArrayList<String>();
-        inserts = new ArrayList<EDBObject>();
-        updates = new ArrayList<EDBObject>();
-        this.revision = UUID.randomUUID().toString();
-    }
-
-    @Override
-    public void setCommitted(Boolean committed) {
-        this.committed = committed;
-    }
-
-    @Override
-    public boolean isCommitted() {
-        return committed;
-    }
-
-    @Override
-    public List<String> getOIDs() {
-        fillOIDs();
-        return oids;
-    }
-
-    public final List<EDBObject> getObjects() {
-        List<EDBObject> objects = new ArrayList<EDBObject>();
-        objects.addAll(inserts);
-        objects.addAll(updates);
-        return objects;
-    }
-
-    @Override
-    public final List<String> getDeletions() {
-        return deletions;
-    }
-
-    @Override
-    public final String getCommitter() {
-        return committer;
-    }
-
-    @Override
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public final Long getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public final String getContextId() {
-        return context;
-    }
-
-    @Override
-    public void delete(String oid) throws EDBException {
-        if (deletions.contains(oid)) {
-            LOGGER.debug("could not delete object {} because it was never added", oid);
-            return;
-        }
-        deletions.add(oid);
-        LOGGER.debug("deleted object {} from the commit", oid);
-    }
-    
-    public void deleteAll(List<EDBObject> objects) throws EDBException {
-        if (objects != null) {
-            for (EDBObject object : objects) {
-                delete(object.getOID());
-            }
-        }
-    }
-
-    private void fillOIDs() {
-        if (oids == null) {
-            oids = new ArrayList<String>();
-        } else {
-            oids.clear();
-        }
-        for (EDBObject o : objects) {
-            oids.add(o.getOID());
-        }
-    }
-
-    @Override
-    public void insert(EDBObject obj) throws EDBException {
-        if (!inserts.contains(obj)) {
-            inserts.add(obj);
-            LOGGER.debug("Added object {} to the commit for inserting", obj.getOID());
-        }
-    }
-    
-    public void insertAll(List<EDBObject> objects) throws EDBException {
-        if (objects != null) {
-            for (EDBObject object : objects) {
-                insert(object);
-            }
-        }
-    }
-
-    @Override
-    public void update(EDBObject obj) throws EDBException {
-        if (!updates.contains(obj)) {
-            updates.add(obj);
-            LOGGER.debug("Added object {} to the commit for updating", obj.getOID());
-        }
-    }
-    
-    public void updateAll(List<EDBObject> objects) throws EDBException {
-        if (objects != null) {
-            for (EDBObject object : objects) {
-                update(object);
-            }
-        }
-    }
-
-    @Override
-    public List<EDBObject> getInserts() {
-        return inserts;
-    }
-
-    @Override
-    public List<EDBObject> getUpdates() {
-        return updates;
-    }
-
-    @Override
-    public UUID getParentRevisionNumber() {
-        return parent != null ? UUID.fromString(parent) : null;
-    }
-
-    @Override
-    public UUID getRevisionNumber() {
-        return revision != null ? UUID.fromString(revision) : null;
-    }
-
-    @Override
-    public void setHeadRevisionNumber(UUID head) {
-        this.parent = head != null ? head.toString() : null;
-    }
+	public JPACommit() {
+		super();
+	}
+	
+	public JPACommit(String committer, String contextId) {
+		super(committer, contextId);
+	}
 }

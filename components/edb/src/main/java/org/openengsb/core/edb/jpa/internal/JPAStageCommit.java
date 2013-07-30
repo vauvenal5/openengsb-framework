@@ -15,17 +15,21 @@
  */
 package org.openengsb.core.edb.jpa.internal;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
 import javax.persistence.ManyToOne;
+import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStageObject;
 
 /**
  *
  * @author vauve_000
  */
-public class JPAStageCommit extends JPACommit implements EDBStageCommit{
+public class JPAStageCommit extends JPABaseCommit<EDBStageObject> implements EDBStageCommit {
 
 	@ManyToOne(fetch= FetchType.LAZY)
 	private EDBStage stage;
@@ -43,5 +47,4 @@ public class JPAStageCommit extends JPACommit implements EDBStageCommit{
 	public void setStage(EDBStage stage) {
 		this.stage = stage;
 	}
-	
 }
