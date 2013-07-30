@@ -418,7 +418,7 @@ public class EDBService extends AbstractEDBService {
     }
 	
 	@Override
-	public EDBStageCommit createEDBStageCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
+	public EDBStageCommit createEDBStageCommit(List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
 		throws EDBException {
 		String committer = getAuthenticatedUser();
         String contextId = getActualContextId();
