@@ -28,8 +28,10 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import org.openengsb.core.edb.api.EDBBaseObject;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.jpa.internal.JPABaseObject;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
 import org.slf4j.Logger;
@@ -127,7 +129,7 @@ public abstract class AbstractJPADao
         }
 	}
 	
-	protected <J extends JPAObject, E extends EDBObject> JPAHead getJPAHead(Class<J> type, String sid, long timestamp) throws EDBException {
+	protected <J extends JPABaseObject, E extends EDBBaseObject> JPAHead getJPAHead(Class<J> type, String sid, long timestamp) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading head for timestamp {}", timestamp);
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

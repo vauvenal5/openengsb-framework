@@ -20,7 +20,7 @@ package org.openengsb.core.edb.api;
 /**
  * A LogEntry pairs an object with its commit.
  */
-public interface EDBLogEntry<C extends EDBCommit, O extends EDBObject> {
+public interface EDBLogEntry<C extends EDBBaseCommit, O extends EDBBaseObject> {
 
     /**
      * Get the entry's Commit.

@@ -20,6 +20,7 @@ package org.openengsb.core.edb.jpa.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.AttributeOverride;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -37,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class JPACommit extends JPABaseCommit<EDBObject> implements EDBCommit {
 
 	/**

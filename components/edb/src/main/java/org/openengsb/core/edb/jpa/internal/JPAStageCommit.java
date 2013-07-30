@@ -17,6 +17,7 @@ package org.openengsb.core.edb.jpa.internal;
 
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
@@ -25,14 +26,19 @@ import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBStageObject;
 
-/**
- *
- * @author vauve_000
- */
+@Entity
 public class JPAStageCommit extends JPABaseCommit<EDBStageObject> implements EDBStageCommit {
 
 	@ManyToOne(fetch= FetchType.LAZY)
 	private EDBStage stage;
+
+	/**
+     * the empty constructor is only for the jpa enhancer. Do not use it in real code.
+     */
+    @Deprecated
+	public JPAStageCommit()
+	{
+	}
 	
 	public JPAStageCommit(String committer, String contextId) {
 		super(committer, contextId);

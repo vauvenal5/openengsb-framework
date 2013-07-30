@@ -28,21 +28,17 @@ import org.apache.openjpa.persistence.jdbc.Index;
 
 @SuppressWarnings("serial")
 @MappedSuperclass
-/**
- *
- * @author paul
- */
 public abstract class JPABaseObject<T extends JPAEntry> extends VersionedEntity {
     
     @Column(name = "TIME")
-    private Long timestamp;
+    protected Long timestamp;
     @Column(name = "ISDELETED")
-    private Boolean isDeleted;
+    protected Boolean isDeleted;
     @Index
     @Column(name = "OID")
-    private String oid;   
+    protected String oid;   
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<T> entries;
+    protected List<T> entries;
     
     protected JPABaseObject() {
         isDeleted = false;

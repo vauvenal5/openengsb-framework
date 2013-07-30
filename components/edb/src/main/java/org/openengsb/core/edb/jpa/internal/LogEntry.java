@@ -17,13 +17,15 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
+import org.openengsb.core.edb.api.EDBBaseCommit;
+import org.openengsb.core.edb.api.EDBBaseObject;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.EDBStageObject;
 
-public class LogEntry<C extends EDBCommit, O extends EDBObject> implements EDBLogEntry<C, O> {
+public class LogEntry<C extends EDBBaseCommit, O extends EDBBaseObject> implements EDBLogEntry<C, O> {
     private C commit;
     private O object;
 

@@ -33,6 +33,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.jpa.internal.JPABaseCommit;
 import org.openengsb.core.edb.jpa.internal.JPACommit;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
@@ -158,7 +159,8 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public List<JPACommit> getJPACommit(long timestamp) throws EDBException {
-        return super.getJPACommit(JPACommit.class, timestamp, null);
+        //return (List<JPACommit>)(List<?>)super.getJPACommit(JPABaseCommit.class, timestamp, null);
+		return super.getJPACommit(JPACommit.class, timestamp, null);
     }
 	
 	@Override

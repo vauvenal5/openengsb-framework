@@ -21,13 +21,13 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-@SuppressWarnings("serial")
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+
 /**
  * this defines a jpa object in the database. The correlation to the EDBObject is that
  * the JPAObject can be converted to an EDBObject through the EDBUtils class.
  */
+@SuppressWarnings("serial")
+@Entity
 public class JPAObject extends JPABaseObject<JPAEntry> {
     public JPAObject(){
         super();

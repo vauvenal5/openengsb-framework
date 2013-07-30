@@ -20,11 +20,13 @@ package org.openengsb.core.edb.jpa.internal.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.openengsb.core.edb.api.EDBBaseObject;
 
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBObjectEntry;
 import org.openengsb.core.edb.api.EDBStageObject;
 import org.openengsb.core.edb.api.EDBStageObjectEntry;
+import org.openengsb.core.edb.jpa.internal.JPABaseObject;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
 import org.openengsb.core.edb.jpa.internal.JPAStageEntry;
@@ -81,9 +83,10 @@ public final class EDBUtils {
     /**
      * Converts a JPAObject object into an EDBObject.
      */
-    public static EDBObject convertJPAObjectToEDBObject(JPAObject object) {
-        EDBObject result = new EDBObject(object.getOID());
-        for (JPAEntry kvp : object.getEntries()) {
+    
+	public static EDBBaseObject convertJPAObjectToEDBObjectHelper(JPABaseObject object) {
+        EDBBaseObject result = convertJPAObjectToEDBObjectHelper1(object);
+        for (JPAEntry kvp : (List<JPAEntry>)object.getEntries()) {
             EDBObjectEntry entry = convertJPAEntryToEDBObjectEntry(kvp);
             result.put(entry.getKey(), entry);
         }
@@ -92,8 +95,20 @@ public final class EDBUtils {
         return result;
     }
 	
-	 public static EDBStageObject convertJPAObjectToEDBObject(JPAStageObject object) {
-		 return null;
+	public static EDBObject convertJPAObjectToEDBObject(JPAObject object) {
+		return (EDBObject)convertJPAObjectToEDBObjectHelper(object);
+	}
+	
+	public static EDBStageObject convertJPAObjectToEDBObject(JPAStageObject object) {
+		return (EDBStageObject)convertJPAObjectToEDBObjectHelper(object);
+	}
+	
+	 public static EDBBaseObject convertJPAObjectToEDBObjectHelper1(JPABaseObject object) {
+		 if(object instanceof JPAObject) {
+			return new EDBObject(object.getOID());
+		 }
+		 
+		 return new EDBStageObject(((JPAStageObject)object).getStageId(), object.getOID());
 	 }
 
     /**
@@ -126,10 +141,10 @@ public final class EDBUtils {
     /**
      * Converts a list of JPAObjects into a list of EDBObjects
      */
-    public static <E extends EDBObject, J extends JPAObject> List<E> convertJPAObjectsToEDBObjects(List<J> objects) {
+    public static <E extends EDBBaseObject, J extends JPABaseObject> List<E> convertJPAObjectsToEDBObjects(List<J> objects) {
         List<E> result = new ArrayList<E>();
         for (J object : objects) {
-            result.add((E)convertJPAObjectToEDBObject(object));
+            result.add((E)convertJPAObjectToEDBObjectHelper(object));
         }
         return result;
     }

@@ -25,6 +25,8 @@
 
     <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/openengsb)</jta-data-source>
     <class>org.openengsb.core.edb.jpa.internal.VersionedEntity</class>
+	<class>org.openengsb.core.edb.jpa.internal.JPABaseCommit</class>
+	<class>org.openengsb.core.edb.jpa.internal.JPABaseObject</class>
     <class>org.openengsb.core.edb.jpa.internal.JPACommit</class>
     <class>org.openengsb.core.edb.jpa.internal.JPAObject</class>
     <class>org.openengsb.core.edb.jpa.internal.JPAEntry</class>

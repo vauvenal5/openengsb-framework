@@ -18,8 +18,13 @@ package org.openengsb.core.edb.jpa.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import org.openengsb.core.edb.api.EDBBaseCommit;
@@ -34,30 +39,30 @@ public abstract class JPABaseCommit<T extends EDBBaseObject> extends VersionedEn
 	private static final Logger LOGGER = LoggerFactory.getLogger(JPABaseCommit.class);
 
     @Column(name = "COMMITER", length = 50)
-    private String committer;
+    protected String committer;
     @Column(name = "TIME")
-    private Long timestamp;
+    protected Long timestamp;
     @Column(name = "CONTEXT", length = 50)
-    private String context;
+    protected String context;
     @Column(name = "DELS")
     @ElementCollection
-    private List<String> deletions;
+    protected List<String> deletions;
     @Column(name = "OIDS")
     @ElementCollection
-    private List<String> oids;
+    protected List<String> oids;
     @Column(name = "ISCOMMITED")
-    private Boolean committed = false;
+    protected Boolean committed = false;
     @Column(name = "REVISION")
-    private String revision;
+    protected String revision;
     @Column(name = "PARENT")
-    private String parent;
+    protected String parent;
 
-    private List<T> objects;
+    protected List<T> objects;
 
     @Transient
-    private List<T> inserts;
+    protected List<T> inserts;
     @Transient
-    private List<T> updates;
+    protected List<T> updates;
     
     /**
      * the empty constructor is only for the jpa enhancer. Do not use it in real code.
