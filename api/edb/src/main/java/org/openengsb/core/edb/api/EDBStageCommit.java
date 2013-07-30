@@ -19,7 +19,8 @@ package org.openengsb.core.edb.api;
  *
  * 
  */
-public interface EDBStageCommit extends EDBCommit {
+public interface EDBStageCommit extends EDBBaseCommit<EDBStageObject> {
+//extends EDBCommit {
 	
 	public EDBStage getStage();
 	

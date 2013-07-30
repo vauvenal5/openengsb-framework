@@ -21,7 +21,8 @@ import java.util.Map;
  *
  * 
  */
-public class EDBStageObject extends EDBObject {
+public class EDBStageObject extends EDBBaseObject<EDBStageObjectEntry> {
+//extends EDBObject {
 	private static final String SID_CONST = "sid";
 	
     public EDBStageObject(String stageId, String oid) {
@@ -29,7 +30,7 @@ public class EDBStageObject extends EDBObject {
 		setStageId(stageId);
     }
 
-    public EDBStageObject(String stageId, String oid, Map<String, EDBObjectEntry> data) {
+    public EDBStageObject(String stageId, String oid, Map<String, EDBStageObjectEntry> data) {
         super(oid, data);
 		setStageId(stageId);
     }
@@ -39,6 +40,11 @@ public class EDBStageObject extends EDBObject {
 	}
 	
 	public void setStageId(String stageId){
-		this.putEDBObjectEntry(SID_CONST, stageId);
+		this.putEntry(SID_CONST, stageId);
+	}
+
+	@Override
+	public void putEntry(String key, Object value, String type) {
+		put(key, new EDBStageObjectEntry(this.getStageId(), key, value, type));
 	}
 }
