@@ -17,9 +17,13 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -29,7 +33,21 @@ import javax.persistence.InheritanceType;
 @SuppressWarnings("serial")
 @Entity
 public class JPAObject extends JPABaseObject<JPAEntry> {
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<JPAEntry> entries;
+	
     public JPAObject(){
         super();
     }
+	
+	@Override
+	public List<JPAEntry> getEntries() {
+        return entries;
+    }
+    
+	@Override
+    public void setEntries(List<JPAEntry> entries) {
+        this.entries = entries;
+    } 
 }

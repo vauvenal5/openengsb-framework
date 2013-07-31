@@ -18,8 +18,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import org.openengsb.core.edb.api.EDBStageObjectEntry;
 
-import org.apache.openjpa.persistence.jdbc.Index;
-
 @SuppressWarnings("serial")
 @Entity
 public class JPAStageEntry extends JPAEntry {

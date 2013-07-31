@@ -20,7 +20,10 @@ package org.openengsb.core.edb.jpa.internal;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import org.apache.openjpa.persistence.jdbc.Index;
@@ -37,20 +40,15 @@ public abstract class JPABaseObject<T extends JPAEntry> extends VersionedEntity 
     @Index
     @Column(name = "OID")
     protected String oid;   
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    protected List<T> entries;
+    
     
     protected JPABaseObject() {
         isDeleted = false;
     }
     
-    public List<T> getEntries() {
-        return entries;
-    }
+    public abstract List<T> getEntries();
     
-    public void setEntries(List<T> entries) {
-        this.entries = entries;
-    }  
+    public abstract void setEntries(List<T> entries);
     
     public Boolean isDeleted() {
         return isDeleted;

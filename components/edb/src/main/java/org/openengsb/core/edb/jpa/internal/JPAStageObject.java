@@ -16,14 +16,20 @@
  */
 package org.openengsb.core.edb.jpa.internal;
 
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @SuppressWarnings("serial")
 @Entity
 public class JPAStageObject extends JPABaseObject<JPAStageEntry> {
 	@Column(name="STAGEID")
 	private String stageId;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<JPAStageEntry> entries;
 	
 	public JPAStageObject() {
 		super();
@@ -35,5 +41,17 @@ public class JPAStageObject extends JPABaseObject<JPAStageEntry> {
 	
 	public String getStageId() {
 		return this.stageId;
+	}
+
+	@Override
+	public List<JPAStageEntry> getEntries()
+	{
+		return this.entries;
+	}
+
+	@Override
+	public void setEntries(List<JPAStageEntry> entries)
+	{
+		this.entries = entries;
 	}
 }
