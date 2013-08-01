@@ -27,7 +27,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class JPAStageObject extends JPABaseObject<JPAStageEntry> {
 	@Column(name="STAGEID")
-	private String stageId;
+	protected String stageId;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<JPAStageEntry> entries;
 	

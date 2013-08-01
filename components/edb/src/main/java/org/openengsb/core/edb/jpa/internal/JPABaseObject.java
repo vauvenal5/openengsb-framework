@@ -30,7 +30,8 @@ import org.apache.openjpa.persistence.jdbc.Index;
 
 
 @SuppressWarnings("serial")
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class JPABaseObject<T extends JPAEntry> extends VersionedEntity {
     
     @Column(name = "TIME")

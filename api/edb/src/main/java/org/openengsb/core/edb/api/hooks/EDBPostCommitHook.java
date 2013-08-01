@@ -18,6 +18,7 @@
 package org.openengsb.core.edb.api.hooks;
 
 import org.openengsb.core.edb.api.EDBCommit;
+import org.openengsb.core.edb.api.EDBStageCommit;
 
 /**
  * Defines the functions of the post-commit hook for the EDB component. All services in the OSGi environment providing
@@ -30,4 +31,6 @@ public interface EDBPostCommitHook {
      * ignored.
      */
     void onPostCommit(EDBCommit commit);
+	
+	void onPostCommit(EDBStageCommit commit);
 }

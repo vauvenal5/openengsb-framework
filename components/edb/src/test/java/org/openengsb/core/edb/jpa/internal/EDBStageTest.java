@@ -15,6 +15,7 @@
  */
 package org.openengsb.core.edb.jpa.internal;
 
+import java.util.Arrays;
 import java.util.Date;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,10 +23,11 @@ import org.junit.Test;
 import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.EDBStageObject;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class EDBStageTest extends AbstractEDBTest
 {
-	@Test
+	
 	public void testPersistStageObject_shouldWork()
 	{
 		String creator = "Svetoslav";
@@ -46,9 +48,31 @@ public class EDBStageTest extends AbstractEDBTest
 		
 		commit.insert(object);
 		
-		db.commit(commit);
+		//db.commit(commit);
 		
 		//todo: take closer look on EDBService
 		assertThat(false, is(true));
 	}
+	
+	@Test
+    public void testCommit_shouldWork() throws Exception {
+		JPAStage stage = new JPAStage();
+		stage.setStageId("stage1");
+		stage.setCreator("sveti");
+		stage.setTimeStamp(Long.MIN_VALUE);
+        EDBStageObject obj = new EDBStageObject("stage1","Tester");
+        obj.putEntry("Test", "Hooray");
+        EDBStageCommit ci = db.createEDBStageCommit(Arrays.asList(obj), null, null);
+		ci.setStage(stage);
+        long time = db.commit(ci);
+
+        obj = null;
+        obj = db.getStagedObject("Tester", "stage1");
+        String hooray = obj.getString("Test");
+
+        assertThat(obj, notNullValue());
+        assertThat(hooray, notNullValue());
+
+        checkTimeStamps(Arrays.asList(time));
+    }
 }

@@ -30,6 +30,8 @@ public interface EngineeringDatabaseService {
      * Commit the provided commit object and returns the corresponding time stamp for the commit.
      */
     Long commit(EDBCommit obj) throws EDBException;
+	
+	Long commit(EDBStageCommit obj) throws EDBException;
 
     /**
      * Retrieve the current state of the object with the specified OID.

@@ -19,6 +19,7 @@ package org.openengsb.core.edb.api.hooks;
 
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.api.EDBStageCommit;
 
 /**
  * Defines the functions of the begin-commit hook for the EDB component. All services in the OSGi environment providing
@@ -36,4 +37,6 @@ public interface EDBBeginCommitHook {
      * exception gets caught, logged and ignored.
      */
     void onStartCommit(EDBCommit commit) throws EDBException;
+	
+	void onStartCommit(EDBStageCommit commit) throws EDBException;
 }

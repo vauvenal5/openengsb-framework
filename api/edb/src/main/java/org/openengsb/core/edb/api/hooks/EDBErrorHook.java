@@ -19,6 +19,7 @@ package org.openengsb.core.edb.api.hooks;
 
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.api.EDBStageCommit;
 
 /**
  * Defines the functions of the error hook for the EDB component. All services in the OSGi environment providing this
@@ -37,4 +38,6 @@ public interface EDBErrorHook {
      * If it throws any other exception, it gets caught, logged and ignored.
      */
     EDBCommit onError(EDBCommit commit, Exception cause) throws EDBException;
+	
+	EDBCommit onError(EDBStageCommit commit, Exception cause) throws EDBException;
 }

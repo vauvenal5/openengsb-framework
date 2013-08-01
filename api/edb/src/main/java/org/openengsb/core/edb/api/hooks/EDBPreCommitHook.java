@@ -19,6 +19,7 @@ package org.openengsb.core.edb.api.hooks;
 
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
+import org.openengsb.core.edb.api.EDBStageCommit;
 
 /**
  * Defines the functions of the pre-commit hook for the EDB component. All services in the OSGi environment providing
@@ -35,4 +36,6 @@ public interface EDBPreCommitHook {
      * logged and ignored.
      */
     void onPreCommit(EDBCommit commit) throws EDBException;
+	
+	void onPreCommit(EDBStageCommit commit) throws EDBException;
 }

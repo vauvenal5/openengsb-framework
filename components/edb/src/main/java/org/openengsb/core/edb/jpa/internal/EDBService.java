@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import org.openengsb.core.api.context.ContextHolder;
 import org.openengsb.core.api.security.AuthenticationContext;
+import org.openengsb.core.edb.api.EDBBaseCommit;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBDiff;
 import org.openengsb.core.edb.api.EDBException;
@@ -58,8 +59,13 @@ public class EDBService extends AbstractEDBService {
     @Override
     public Long commit(EDBCommit commit) throws EDBException {
         return performCommitLogic(commit);
-    }    
+    }     
 
+	@Override
+    public Long commit(EDBStageCommit commit) throws EDBException {
+        return performCommitLogic(commit);
+    }
+	
     /**
      * Only here for the TestEDBService where there is a real implementation for this method.
      */

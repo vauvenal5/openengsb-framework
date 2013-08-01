@@ -43,7 +43,7 @@ public class StringConverterStep implements EDBConverterStep {
     }
 
 	@Override
-	public JPAStageEntry convertToJPAEntry(EDBStageObjectEntry entry)
+	public JPAEntry convertToJPAEntry(EDBStageObjectEntry entry)
 	{
 		return new JPAStageEntry(entry);
 	}

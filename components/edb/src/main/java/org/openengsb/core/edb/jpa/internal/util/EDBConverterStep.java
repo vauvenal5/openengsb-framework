@@ -38,7 +38,7 @@ public interface EDBConverterStep {
      */
     JPAEntry convertToJPAEntry(EDBObjectEntry entry);
 	
-	JPAStageEntry convertToJPAEntry(EDBStageObjectEntry entry);
+	JPAEntry convertToJPAEntry(EDBStageObjectEntry entry);
 
     /**
      * Converts a JPAEntry into an EDBObjectEntry.

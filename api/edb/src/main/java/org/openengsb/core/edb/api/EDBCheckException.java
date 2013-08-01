@@ -25,8 +25,8 @@ import java.util.List;
 */
 @SuppressWarnings("serial")
 public class EDBCheckException extends EDBException {
-    private List<EDBObject> failedInserts;
-    private List<EDBObject> failedUpdates;
+    private List<EDBBaseObject> failedInserts;
+    private List<EDBBaseObject> failedUpdates;
     private List<String> failedDeletes;
     
     public EDBCheckException() {
@@ -45,19 +45,19 @@ public class EDBCheckException extends EDBException {
         super(s, t);
     }
 
-    public List<EDBObject> getFailedInserts() {
+    public List<EDBBaseObject> getFailedInserts() {
         return failedInserts;
     }
 
-    public void setFailedInserts(List<EDBObject> failedInserts) {
+    public void setFailedInserts(List<EDBBaseObject> failedInserts) {
         this.failedInserts = failedInserts;
     }
 
-    public List<EDBObject> getFailedUpdates() {
+    public List<EDBBaseObject> getFailedUpdates() {
         return failedUpdates;
     }
 
-    public void setFailedUpdates(List<EDBObject> failedUpdates) {
+    public void setFailedUpdates(List<EDBBaseObject> failedUpdates) {
         this.failedUpdates = failedUpdates;
     }
 
