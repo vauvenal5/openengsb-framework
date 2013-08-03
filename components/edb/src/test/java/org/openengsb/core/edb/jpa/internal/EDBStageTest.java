@@ -62,8 +62,7 @@ public class EDBStageTest extends AbstractEDBTest
 		stage.setTimeStamp(Long.MIN_VALUE);
         EDBStageObject obj = new EDBStageObject("stage1","Tester");
         obj.putEntry("Test", "Hooray");
-        EDBStageCommit ci = db.createEDBStageCommit(Arrays.asList(obj), null, null);
-		ci.setStage(stage);
+        EDBStageCommit ci = db.createEDBStageCommit(stage, Arrays.asList(obj), null, null);
         long time = db.commit(ci);
 
         obj = null;

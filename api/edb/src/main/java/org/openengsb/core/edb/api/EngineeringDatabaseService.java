@@ -178,7 +178,7 @@ public interface EngineeringDatabaseService {
     EDBCommit createEDBCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
         throws EDBException;
 	
-	EDBStageCommit createEDBStageCommit(List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
+	EDBStageCommit createEDBStageCommit(EDBStage stage, List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
 		throws EDBException;
     
     /**

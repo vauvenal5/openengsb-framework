@@ -79,7 +79,7 @@ public class AbstractEDBTest {
     }
 	
 	protected EDBStageCommit getEDBStageCommit() {
-		return db.createEDBStageCommit(null, null, null);
+		return db.createEDBStageCommit(null, null, null, null);
 	}
 
     /**

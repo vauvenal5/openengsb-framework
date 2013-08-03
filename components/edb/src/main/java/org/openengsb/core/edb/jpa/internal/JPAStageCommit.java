@@ -16,12 +16,15 @@
 package org.openengsb.core.edb.jpa.internal;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBStageObject;
@@ -29,8 +32,8 @@ import org.openengsb.core.edb.api.EDBStageObject;
 @Entity
 public class JPAStageCommit extends JPABaseCommit<EDBStageObject> implements EDBStageCommit {
 
-	@ManyToOne(fetch= FetchType.LAZY)
-	private EDBStage stage;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private JPAStage stage;
 
 	/**
      * the empty constructor is only for the jpa enhancer. Do not use it in real code.
@@ -51,6 +54,6 @@ public class JPAStageCommit extends JPABaseCommit<EDBStageObject> implements EDB
 
 	@Override
 	public void setStage(EDBStage stage) {
-		this.stage = stage;
+		this.stage = (JPAStage)stage;
 	}
 }

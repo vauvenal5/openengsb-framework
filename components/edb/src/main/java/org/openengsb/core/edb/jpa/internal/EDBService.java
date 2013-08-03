@@ -31,6 +31,7 @@ import org.openengsb.core.edb.api.EDBDiff;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.EDBStageObject;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
@@ -424,16 +425,17 @@ public class EDBService extends AbstractEDBService {
     }
 	
 	@Override
-	public EDBStageCommit createEDBStageCommit(List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
+	public EDBStageCommit createEDBStageCommit(EDBStage stage, List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
 		throws EDBException {
 		String committer = getAuthenticatedUser();
         String contextId = getActualContextId();
         JPAStageCommit commit = new JPAStageCommit(committer, contextId);
+		commit.setStage(stage);
         getLogger().debug("creating staged commit for committer {} with contextId {}", committer, contextId);
         commit.insertAll(inserts);
         commit.updateAll(updates);
         commit.deleteAll(deletes);
-        commit.setHeadRevisionNumber(getCurrentRevisionNumber());
+        commit.setHeadRevisionNumber(getStagedCurrentRevisionNumber(stage.getStageId()));
         return commit;
 	}
 

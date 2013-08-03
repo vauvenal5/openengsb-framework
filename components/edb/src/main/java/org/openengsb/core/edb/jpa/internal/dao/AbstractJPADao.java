@@ -34,6 +34,7 @@ import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.jpa.internal.JPABaseObject;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
+import org.openengsb.core.edb.jpa.internal.JPAStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +51,10 @@ public abstract class AbstractJPADao
 	{
 		if(sid != null)
 		{
-			Predicate predicateSid = criteriaBuilder.equal(from.get("stageId"), sid);
-			return criteriaBuilder.and(predicate, predicateSid);
+			Join join = from.join("stage");
+			Predicate predicateSid = criteriaBuilder.equal(join.get("stageId"), sid);
+			return predicateSid;
+			//return criteriaBuilder.and(predicateSid);
 		}
 		
 		return predicate;
@@ -278,10 +281,10 @@ public abstract class AbstractJPADao
             Subquery<Number> subquery = query.subquery(Number.class);
             Root maxTime = subquery.from(type);
             subquery.select(criteriaBuilder.max(maxTime.get("timestamp")));
-            subquery.where(checkSid(criteriaBuilder, maxTime, sid, criteriaBuilder.le(maxTime.get("timestamp"), timestamp)));
-
-            query.where(checkSid(criteriaBuilder, from, sid, criteriaBuilder.equal(from.get("timestamp"), subquery)));
-
+            subquery.where(criteriaBuilder.le(maxTime.get("timestamp"), timestamp), checkSid(criteriaBuilder, maxTime, sid, null));
+			
+			query.where(criteriaBuilder.equal(from.get("timestamp"), subquery));
+			
             TypedQuery<T> typedQuery = entityManager.createQuery(query);
             return typedQuery.getResultList();
         }
