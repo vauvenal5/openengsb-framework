@@ -22,25 +22,23 @@ import org.openengsb.core.edb.api.EDBBaseObject;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EDBStageCommit;
-import org.openengsb.core.edb.api.EDBStageObject;
 
-public class LogEntry<C extends EDBBaseCommit, O extends EDBBaseObject> implements EDBLogEntry<C, O> {
-    private C commit;
-    private O object;
+public class LogEntry implements EDBLogEntry {
+    private EDBCommit commit;
+    private EDBObject object;
 
-    public LogEntry(C c, O obj) {
+    public LogEntry(EDBCommit c, EDBObject obj) {
         this.commit = c;
         this.object = obj;
     }
 
     @Override
-    public C getCommit() {
+    public EDBCommit getCommit() {
         return commit;
     }
 
     @Override
-    public O getObject() {
+    public EDBObject getObject() {
         return object;
     }
 }

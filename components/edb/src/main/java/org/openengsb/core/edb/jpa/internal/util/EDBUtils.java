@@ -24,13 +24,9 @@ import org.openengsb.core.edb.api.EDBBaseObject;
 
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBObjectEntry;
-import org.openengsb.core.edb.api.EDBStageObject;
-import org.openengsb.core.edb.api.EDBStageObjectEntry;
 import org.openengsb.core.edb.jpa.internal.JPABaseObject;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
-import org.openengsb.core.edb.jpa.internal.JPAStageEntry;
-import org.openengsb.core.edb.jpa.internal.JPAStageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +87,7 @@ public final class EDBUtils {
 		for (EDBConverterStep step : steps) {
             if (step.doesStepFit(entry.getType())) {
                 LOGGER.debug("EDBConverterStep {} fit for type {}", step.getClass().getName(), entry.getType());
-                return (J)step.convertToJPAEntry((EDBStageObjectEntry)entry);
+                return (J)step.convertToJPAEntry(entry);
             }
         }
         LOGGER.error("No EDBConverterStep fit for EDBObjectEntry {}", entry);
@@ -106,13 +102,13 @@ public final class EDBUtils {
 		return entries;
 	}
 	
-	private static List<JPAStageEntry> convertEDBObjectEntriesToJPAEntries(EDBStageObject object){
-		List<JPAStageEntry> entries = new ArrayList<JPAStageEntry>();
-		for (EDBStageObjectEntry entry : object.values()) {
-            entries.add(EDBUtils.<EDBStageObjectEntry, JPAStageEntry>convertEDBObjectEntryToJPAEntry(entry));
-        }
-		return entries;
-	}
+//	private static List<JPAStageEntry> convertEDBObjectEntriesToJPAEntries(EDBStageObject object){
+//		List<JPAStageEntry> entries = new ArrayList<JPAStageEntry>();
+//		for (EDBStageObjectEntry entry : object.values()) {
+//            entries.add(EDBUtils.<EDBStageObjectEntry, JPAStageEntry>convertEDBObjectEntryToJPAEntry(entry));
+//        }
+//		return entries;
+//	}
 
     /**
      * Converts a JPAObject object into an EDBObject.
@@ -124,9 +120,9 @@ public final class EDBUtils {
 		if(object instanceof JPAObject) {
 			result = new EDBObject(object.getOID());
 		 }
-		else {
-			result = new EDBStageObject(((JPAStageObject)object).getStageId(), object.getOID());
-		}
+//		else {
+//			result = new EDBStageObject(((JPAStageObject)object).getStageId(), object.getOID());
+//		}
 		
         for (JPAEntry kvp : (List<JPAEntry>)object.getEntries()) {
             EDBObjectEntry entry = convertJPAEntryToEDBObjectEntry(kvp);
@@ -141,9 +137,9 @@ public final class EDBUtils {
 		return (EDBObject)convertJPAObjectToEDBObjectHelper(object);
 	}
 	
-	public static EDBStageObject convertJPAObjectToEDBObject(JPAStageObject object) {
-		return (EDBStageObject)convertJPAObjectToEDBObjectHelper(object);
-	}
+//	public static EDBStageObject convertJPAObjectToEDBObject(JPAStageObject object) {
+//		return (EDBStageObject)convertJPAObjectToEDBObjectHelper(object);
+//	}
 
 	public static JPABaseObject convertEDBObjectToJPAObject(EDBBaseObject object) {
 		JPABaseObject result = null;
@@ -152,10 +148,10 @@ public final class EDBUtils {
 			result = new JPAObject();
 			result.setEntries(EDBUtils.convertEDBObjectEntriesToJPAEntries((EDBObject)object));
 		}
-		else {
-			result = new JPAStageObject();
-			result.setEntries(EDBUtils.convertEDBObjectEntriesToJPAEntries((EDBStageObject)object));
-		}
+//		else {
+//			result = new JPAStageObject();
+//			result.setEntries(EDBUtils.convertEDBObjectEntriesToJPAEntries((EDBStageObject)object));
+//		}
 		
         result.setTimestamp(object.getTimestamp());
         result.setOID(object.getOID());

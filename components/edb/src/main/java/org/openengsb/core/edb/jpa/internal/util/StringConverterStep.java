@@ -18,9 +18,7 @@
 package org.openengsb.core.edb.jpa.internal.util;
 
 import org.openengsb.core.edb.api.EDBObjectEntry;
-import org.openengsb.core.edb.api.EDBStageObjectEntry;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
-import org.openengsb.core.edb.jpa.internal.JPAStageEntry;
 
 /**
  * The StringConverterStep is the step which shall be used if the entry type is a String.
@@ -42,15 +40,15 @@ public class StringConverterStep implements EDBConverterStep {
         return new EDBObjectEntry(entry.getKey(), entry.getValue(), entry.getType());
     }
 
-	@Override
-	public JPAEntry convertToJPAEntry(EDBStageObjectEntry entry)
-	{
-		return new JPAStageEntry(entry);
-	}
-
-	@Override
-	public EDBStageObjectEntry convertToEDBObjectEntry(JPAStageEntry entry)
-	{
-		return new EDBStageObjectEntry(entry.getStageId(), entry.getKey(), entry.getValue(), entry.getType());
-	}
+//	@Override
+//	public JPAEntry convertToJPAEntry(EDBStageObjectEntry entry)
+//	{
+//		return new JPAStageEntry(entry);
+//	}
+//
+//	@Override
+//	public EDBStageObjectEntry convertToEDBObjectEntry(JPAStageEntry entry)
+//	{
+//		return new EDBStageObjectEntry(entry.getStageId(), entry.getKey(), entry.getValue(), entry.getType());
+//	}
 }

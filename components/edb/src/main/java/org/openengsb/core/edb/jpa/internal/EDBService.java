@@ -32,8 +32,6 @@ import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBStage;
-import org.openengsb.core.edb.api.EDBStageCommit;
-import org.openengsb.core.edb.api.EDBStageObject;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
 import org.openengsb.core.edb.api.hooks.EDBPostCommitHook;
@@ -62,10 +60,10 @@ public class EDBService extends AbstractEDBService {
         return performCommitLogic(commit);
     }     
 
-	@Override
-    public Long commit(EDBStageCommit commit) throws EDBException {
-        return performCommitLogic(commit);
-    }
+//	@Override
+//    public Long commit(EDBStageCommit commit) throws EDBException {
+//        return performCommitLogic(commit);
+//    }
 	
     /**
      * Only here for the TestEDBService where there is a real implementation for this method.
@@ -92,12 +90,12 @@ public class EDBService extends AbstractEDBService {
         return EDBUtils.convertJPAObjectToEDBObject(temp);
     }
     
-    @Override 
-    public EDBStageObject getStagedObject(String oid, String sid) throws EDBException {
-        getLogger().debug("loading newest JPAObject with the oid {} and sid {}", new Object[]{oid, sid});
-        JPAStageObject temp = dao.getStagedJPAObject(oid,sid);
-		return EDBUtils.convertJPAObjectToEDBObject(temp);
-    }
+//    @Override 
+//    public EDBStageObject getStagedObject(String oid, String sid) throws EDBException {
+//        getLogger().debug("loading newest JPAObject with the oid {} and sid {}", new Object[]{oid, sid});
+//        JPAStageObject temp = dao.getStagedJPAObject(oid,sid);
+//		return EDBUtils.convertJPAObjectToEDBObject(temp);
+//    }
 
     @Override
     public List<EDBObject> getObjects(List<String> oids) throws EDBException {
@@ -105,11 +103,11 @@ public class EDBService extends AbstractEDBService {
         return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
     
-    @Override
-    public List<EDBStageObject> getStagedObjects(List<String> oids, String sid) throws EDBException {
-        List<JPAStageObject> objects = dao.getStagedJPAObjects(oids, sid);
-        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedObjects(List<String> oids, String sid) throws EDBException {
+//        List<JPAStageObject> objects = dao.getStagedJPAObjects(oids, sid);
+//        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
+//    }
 
     @Override
     public List<EDBObject> getHistory(String oid) throws EDBException {
@@ -118,12 +116,12 @@ public class EDBService extends AbstractEDBService {
         return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
     
-    @Override
-    public List<EDBStageObject> getStagedHistory(String oid, String sid) throws EDBException {
-        getLogger().debug("loading history of JPAStageObject with the oid {} and sid {}", new Object[]{oid,sid});
-        List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid);
-        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedHistory(String oid, String sid) throws EDBException {
+//        getLogger().debug("loading history of JPAStageObject with the oid {} and sid {}", new Object[]{oid,sid});
+//        List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid);
+//        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
+//    }
 
     @Override
     public List<EDBObject> getHistoryForTimeRange(String oid, Long from, Long to) throws EDBException {
@@ -133,13 +131,13 @@ public class EDBService extends AbstractEDBService {
         return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
     
-    @Override
-    public List<EDBStageObject> getStagedHistoryForTimeRange(String oid, String sid, Long from, Long to) throws EDBException {
-         getLogger().debug("loading JPAObject with the oid {} and sid {} from "
-                + "the timestamp {} to the timestamp {}", new Object[]{ oid, sid, from, to });
-        List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid, from, to);
-        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedHistoryForTimeRange(String oid, String sid, Long from, Long to) throws EDBException {
+//         getLogger().debug("loading JPAObject with the oid {} and sid {} from "
+//                + "the timestamp {} to the timestamp {}", new Object[]{ oid, sid, from, to });
+//        List<JPAStageObject> objects = dao.getStagedJPAObjectHistory(oid, sid, from, to);
+//        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
+//    }
     
     @Override
     public List<EDBLogEntry> getLog(String oid, Long from, Long to) throws EDBException {
@@ -158,33 +156,33 @@ public class EDBService extends AbstractEDBService {
         return log;
     }
     
-    @Override
-    public List<EDBLogEntry> getLog(String oid, String sid, Long from, Long to) throws EDBException{
-        getLogger().debug("loading the log of JPAObject with the oid {}, sid {} from timestamp {} to {}", new Object[]{oid, sid, from, to});
-        List<EDBStageObject> history = getStagedHistoryForTimeRange(oid, sid, from, to);
-        List<JPAStageCommit> commits = dao.getStagedJPACommit(oid, sid, from, to);
-        
-         if (history.size() != commits.size()) {
-            throw new EDBException("inconsistent log " + Integer.toString(commits.size()) + " staged commits for "
-                    + Integer.toString(history.size()) + " staged history entries");
-        }
-        List<EDBLogEntry> log = new ArrayList<EDBLogEntry>();
-        for (int i = 0; i < history.size(); ++i) {
-            log.add(new LogEntry<EDBStageCommit, EDBStageObject>(commits.get(i), history.get(i)));
-        }
-        return log;
-    }
+//    @Override
+//    public List<EDBLogEntry> getLog(String oid, String sid, Long from, Long to) throws EDBException{
+//        getLogger().debug("loading the log of JPAObject with the oid {}, sid {} from timestamp {} to {}", new Object[]{oid, sid, from, to});
+//        List<EDBStageObject> history = getStagedHistoryForTimeRange(oid, sid, from, to);
+//        List<JPAStageCommit> commits = dao.getStagedJPACommit(oid, sid, from, to);
+//        
+//         if (history.size() != commits.size()) {
+//            throw new EDBException("inconsistent log " + Integer.toString(commits.size()) + " staged commits for "
+//                    + Integer.toString(history.size()) + " staged history entries");
+//        }
+//        List<EDBLogEntry> log = new ArrayList<EDBLogEntry>();
+//        for (int i = 0; i < history.size(); ++i) {
+//            log.add(new LogEntry<EDBStageCommit, EDBStageObject>(commits.get(i), history.get(i)));
+//        }
+//        return log;
+//    }
 
     @Override
     public List<EDBObject> getHead() throws EDBException {
         return dao.getJPAHead(System.currentTimeMillis()).getEDBObjects();
     }
     
-    @Override
-    public List<EDBStageObject> getStageHead(String sid) throws EDBException {
-        throw new UnsupportedOperationException();
-        //return dao.getStagedJPAHead(System.currentTimeMillis(), sid).getStagedEDBObjects();
-    }
+//    @Override
+//    public List<EDBStageObject> getStageHead(String sid) throws EDBException {
+//        throw new UnsupportedOperationException();
+//        //return dao.getStagedJPAHead(System.currentTimeMillis(), sid).getStagedEDBObjects();
+//    }
 
     @Override
     public List<EDBObject> getHead(long timestamp) throws EDBException {
@@ -196,18 +194,18 @@ public class EDBService extends AbstractEDBService {
         throw new EDBException("Failed to get head for timestamp " + Long.toString(timestamp));
     }
     
-    @Override
-    public List<EDBStageObject> getStagedHead(String sid, long timestamp) throws EDBException {
-        throw new UnsupportedOperationException();
-        /*
-        getLogger().debug("load the elements of the JPAHead from stage {} with the timestamp {}", new Object[] {sid, timestamp});
-        JPAHead head = dao.getStagedJPAHead(timestamp, sid);
-        if (head != null) {
-            return head.getStagedEDBObjects();
-        }
-        throw new EDBException("Failed to get head for timestamp " + Long.toString(timestamp)); 
-        */
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedHead(String sid, long timestamp) throws EDBException {
+//        throw new UnsupportedOperationException();
+//        /*
+//        getLogger().debug("load the elements of the JPAHead from stage {} with the timestamp {}", new Object[] {sid, timestamp});
+//        JPAHead head = dao.getStagedJPAHead(timestamp, sid);
+//        if (head != null) {
+//            return head.getStagedEDBObjects();
+//        }
+//        throw new EDBException("Failed to get head for timestamp " + Long.toString(timestamp)); 
+//        */
+//    }
 
     @Override
     public List<EDBObject> queryByKeyValue(String key, Object value) throws EDBException {
@@ -217,13 +215,13 @@ public class EDBService extends AbstractEDBService {
         return queryByMap(queryMap);
     }
     
-    @Override
-    public List<EDBStageObject> queryStageByKeyValue(String sid, String key, Object value) throws EDBException{
-        getLogger().debug("query for objects with sid {} and key = {} and value = {}", new Object[] {sid, key, value});
-        Map<String, Object> queryMap = new HashMap<String, Object>();
-        queryMap.put(key, value);
-        return queryStageByMap(sid, queryMap);
-    }
+//    @Override
+//    public List<EDBStageObject> queryStageByKeyValue(String sid, String key, Object value) throws EDBException{
+//        getLogger().debug("query for objects with sid {} and key = {} and value = {}", new Object[] {sid, key, value});
+//        Map<String, Object> queryMap = new HashMap<String, Object>();
+//        queryMap.put(key, value);
+//        return queryStageByMap(sid, queryMap);
+//    }
 
     @Override
     public List<EDBObject> queryByMap(Map<String, Object> queryMap) throws EDBException {
@@ -234,14 +232,14 @@ public class EDBService extends AbstractEDBService {
         }
     }
     
-    @Override
-    public List<EDBStageObject> queryStageByMap(String sid, Map<String, Object> query) throws EDBException {
-        try {
-            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid));
-        } catch (Exception ex) {
-            throw new EDBException("failed to query for objects with given map and stage", ex);
-        }
-    }
+//    @Override
+//    public List<EDBStageObject> queryStageByMap(String sid, Map<String, Object> query) throws EDBException {
+//        try {
+//            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid));
+//        } catch (Exception ex) {
+//            throw new EDBException("failed to query for objects with given map and stage", ex);
+//        }
+//    }
 
     @Override
     public List<EDBObject> query(Map<String, Object> queryMap, Long timestamp) throws EDBException {
@@ -252,14 +250,14 @@ public class EDBService extends AbstractEDBService {
         }
     }
     
-    @Override
-    public List<EDBStageObject> queryStage(String sid, Map<String, Object> query, Long timestamp) throws EDBException {
-        try{
-            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid, timestamp));
-         } catch (Exception ex) {
-            throw new EDBException("failed to query for objects with the given map, stage, timestamp", ex);
-        }
-    }
+//    @Override
+//    public List<EDBStageObject> queryStage(String sid, Map<String, Object> query, Long timestamp) throws EDBException {
+//        try{
+//            return EDBUtils.convertJPAObjectsToEDBObjects(dao.queryStaged(query, sid, timestamp));
+//         } catch (Exception ex) {
+//            throw new EDBException("failed to query for objects with the given map, stage, timestamp", ex);
+//        }
+//    }
 
     @Override
     public List<EDBCommit> getCommitsByKeyValue(String key, Object value) throws EDBException {
@@ -268,12 +266,12 @@ public class EDBService extends AbstractEDBService {
         return getCommits(queryMap);
     }
     
-    @Override
-    public List<EDBStageCommit> getStagedCommitsByKeyValue(String key, Object value, String sid) throws EDBException {
-        Map<String, Object> queryMap = new HashMap<String, Object>();
-        queryMap.put(key, value);
-        return getStagedCommits(queryMap, sid);
-    }
+//    @Override
+//    public List<EDBStageCommit> getStagedCommitsByKeyValue(String key, Object value, String sid) throws EDBException {
+//        Map<String, Object> queryMap = new HashMap<String, Object>();
+//        queryMap.put(key, value);
+//        return getStagedCommits(queryMap, sid);
+//    }
 
     @Override
     public List<EDBCommit> getCommits(Map<String, Object> queryMap) throws EDBException {
@@ -281,11 +279,11 @@ public class EDBService extends AbstractEDBService {
         return new ArrayList<EDBCommit>(commits);
     }
     
-    @Override
-    public List<EDBStageCommit> getStagedCommits(Map<String, Object> query, String sid) throws EDBException {
-        List<JPAStageCommit> commits = dao.getStagedCommits(query, sid);
-        return new ArrayList<EDBStageCommit>(commits);
-    }
+//    @Override
+//    public List<EDBStageCommit> getStagedCommits(Map<String, Object> query, String sid) throws EDBException {
+//        List<JPAStageCommit> commits = dao.getStagedCommits(query, sid);
+//        return new ArrayList<EDBStageCommit>(commits);
+//    }
 
     @Override
     public JPACommit getLastCommitByKeyValue(String key, Object value) throws EDBException {
@@ -294,12 +292,12 @@ public class EDBService extends AbstractEDBService {
         return getLastCommit(queryMap);
     }
     
-    @Override 
-    public JPAStageCommit getLastStagedCommitByKeyValue(String key, Object value, String sid) throws EDBException {
-        Map<String, Object> queryMap = new HashMap<String, Object>();
-        queryMap.put(key, value);
-        return getLastStagedCommit(queryMap, sid);
-    }
+//    @Override 
+//    public JPAStageCommit getLastStagedCommitByKeyValue(String key, Object value, String sid) throws EDBException {
+//        Map<String, Object> queryMap = new HashMap<String, Object>();
+//        queryMap.put(key, value);
+//        return getLastStagedCommit(queryMap, sid);
+//    }
 
     @Override
     public JPACommit getLastCommit(Map<String, Object> queryMap) throws EDBException {
@@ -307,11 +305,11 @@ public class EDBService extends AbstractEDBService {
         return result;
     }
     
-    @Override
-    public JPAStageCommit getLastStagedCommit(Map<String, Object> query, String sid) throws EDBException {
-        JPAStageCommit result = dao.getLastStagedCommit(query, sid);
-        return result;
-    }
+//    @Override
+//    public JPAStageCommit getLastStagedCommit(Map<String, Object> query, String sid) throws EDBException {
+//        JPAStageCommit result = dao.getLastStagedCommit(query, sid);
+//        return result;
+//    }
 
     
     @Override
@@ -324,15 +322,15 @@ public class EDBService extends AbstractEDBService {
         }
     }
     
-    @Override
-    public UUID getStagedCurrentRevisionNumber(String sid) throws EDBException {
-        try {
-            return getStagedCommit(System.currentTimeMillis(), sid).getRevisionNumber();
-        } catch (EDBException e) {
-            getLogger().debug("There was no commit so far, so the current revision number is null");
-            return null;
-        }
-    }
+//    @Override
+//    public UUID getStagedCurrentRevisionNumber(String sid) throws EDBException {
+//        try {
+//            return getStagedCommit(System.currentTimeMillis(), sid).getRevisionNumber();
+//        } catch (EDBException e) {
+//            getLogger().debug("There was no commit so far, so the current revision number is null");
+//            return null;
+//        }
+//    }
 
     @Override
     public JPACommit getCommit(Long from) throws EDBException {
@@ -345,16 +343,16 @@ public class EDBService extends AbstractEDBService {
         return commits.get(0);
     }
     
-    @Override
-    public JPAStageCommit getStagedCommit(Long from, String sid) throws EDBException {
-        List<JPAStageCommit> commits = dao.getStagedJPACommit(from, sid);
-        if (commits == null || commits.size() == 0) {
-            throw new EDBException("there is no commit for this timestamp and/or stage");
-        } else if (commits.size() > 1) {
-            throw new EDBException("there are more than one commit for one timestamp and/or stage");
-        }
-        return commits.get(0);
-    }
+//    @Override
+//    public JPAStageCommit getStagedCommit(Long from, String sid) throws EDBException {
+//        List<JPAStageCommit> commits = dao.getStagedJPACommit(from, sid);
+//        if (commits == null || commits.size() == 0) {
+//            throw new EDBException("there is no commit for this timestamp and/or stage");
+//        } else if (commits.size() > 1) {
+//            throw new EDBException("there are more than one commit for one timestamp and/or stage");
+//        }
+//        return commits.get(0);
+//    }
 
     @Override
     public Diff getDiff(Long firstTimestamp, Long secondTimestamp) throws EDBException {
@@ -364,14 +362,14 @@ public class EDBService extends AbstractEDBService {
         return new Diff(getCommit(firstTimestamp), getCommit(secondTimestamp), headA, headB);
     }
     
-    @Override
-    public Diff getStagedDiff(Long firstTimestamp, Long secondTimestamp, String sid1, String sid2) throws EDBException {
-        List<EDBStageObject> headA = getStagedHead(sid1, firstTimestamp);
-        List<EDBStageObject> headB = getStagedHead(sid2, secondTimestamp);
-        
-        throw new UnsupportedOperationException();
-        //return new Diff(getCommit())
-    }
+//    @Override
+//    public Diff getStagedDiff(Long firstTimestamp, Long secondTimestamp, String sid1, String sid2) throws EDBException {
+//        List<EDBStageObject> headA = getStagedHead(sid1, firstTimestamp);
+//        List<EDBStageObject> headB = getStagedHead(sid2, secondTimestamp);
+//        
+//        throw new UnsupportedOperationException();
+//        //return new Diff(getCommit())
+//    }
 
     @Override
     public List<String> getResurrectedOIDs() throws EDBException {
@@ -389,12 +387,12 @@ public class EDBService extends AbstractEDBService {
         return getHead(ci.getTimestamp());
     }
     
-    @Override
-    public List<EDBStageObject> getStagedStateOfLastCommitMatching(Map<String, Object> query, String sid) throws EDBException {
-        throw new UnsupportedOperationException();
-        //JPAStageCommit ci = getLastStagedCommit(query, sid);
-        //return getHead(ci.getTimestamp());    
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedStateOfLastCommitMatching(Map<String, Object> query, String sid) throws EDBException {
+//        throw new UnsupportedOperationException();
+//        //JPAStageCommit ci = getLastStagedCommit(query, sid);
+//        //return getHead(ci.getTimestamp());    
+//    }
 
     @Override
     public List<EDBObject> getStateOfLastCommitMatchingByKeyValue(String key, Object value) throws EDBException {
@@ -403,12 +401,12 @@ public class EDBService extends AbstractEDBService {
         return getStateOfLastCommitMatching(query);
     }
     
-    @Override
-    public List<EDBStageObject> getStagedStateOfLastCommitMatchingByKeyValue(String key, Object value, String sid) throws EDBException {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(key, value);
-        return getStagedStateOfLastCommitMatching(query, sid);
-    }
+//    @Override
+//    public List<EDBStageObject> getStagedStateOfLastCommitMatchingByKeyValue(String key, Object value, String sid) throws EDBException {
+//        Map<String, Object> query = new HashMap<String, Object>();
+//        query.put(key, value);
+//        return getStagedStateOfLastCommitMatching(query, sid);
+//    }
 
     @Override
     public EDBCommit createEDBCommit(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes)
@@ -424,20 +422,20 @@ public class EDBService extends AbstractEDBService {
         return commit;
     }
 	
-	@Override
-	public EDBStageCommit createEDBStageCommit(EDBStage stage, List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
-		throws EDBException {
-		String committer = getAuthenticatedUser();
-        String contextId = getActualContextId();
-        JPAStageCommit commit = new JPAStageCommit(committer, contextId);
-		commit.setStage(stage);
-        getLogger().debug("creating staged commit for committer {} with contextId {}", committer, contextId);
-        commit.insertAll(inserts);
-        commit.updateAll(updates);
-        commit.deleteAll(deletes);
-        commit.setHeadRevisionNumber(getStagedCurrentRevisionNumber(stage.getStageId()));
-        return commit;
-	}
+//	@Override
+//	public EDBStageCommit createEDBStageCommit(EDBStage stage, List<EDBStageObject> inserts, List<EDBStageObject> updates, List<EDBStageObject> deletes)
+//		throws EDBException {
+//		String committer = getAuthenticatedUser();
+//        String contextId = getActualContextId();
+//        JPAStageCommit commit = new JPAStageCommit(committer, contextId);
+//		commit.setStage(stage);
+//        getLogger().debug("creating staged commit for committer {} with contextId {}", committer, contextId);
+//        commit.insertAll(inserts);
+//        commit.updateAll(updates);
+//        commit.deleteAll(deletes);
+//        commit.setHeadRevisionNumber(getStagedCurrentRevisionNumber(stage.getStageId()));
+//        return commit;
+//	}
 
     /**
      * Returns the actual authenticated user.

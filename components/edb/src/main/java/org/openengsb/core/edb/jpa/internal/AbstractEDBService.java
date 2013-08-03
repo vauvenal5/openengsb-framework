@@ -27,7 +27,6 @@ import org.openengsb.core.edb.api.EDBBaseObject;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.EngineeringDatabaseService;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
@@ -153,8 +152,8 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
 				if(commit instanceof EDBCommit)
 					hook.onStartCommit((EDBCommit)commit);
 				
-				if(commit instanceof EDBStageCommit)
-					hook.onStartCommit((EDBStageCommit)commit);
+				/*if(commit instanceof EDBStageCommit)
+					hook.onStartCommit((EDBStageCommit)commit);*/
             } catch (ServiceUnavailableException e) {
                 // Ignore
             } catch (EDBException e) {
@@ -177,8 +176,8 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
                 if(commit instanceof EDBCommit)
 					hook.onPreCommit((EDBCommit)commit);
 				
-				if(commit instanceof EDBStageCommit)
-					hook.onPreCommit((EDBStageCommit)commit);
+				/*if(commit instanceof EDBStageCommit)
+					hook.onPreCommit((EDBStageCommit)commit);*/
             } catch (ServiceUnavailableException e) {
                 // Ignore
             } catch (EDBException e) {
@@ -205,8 +204,8 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
 				if(commit instanceof EDBCommit)
 					newCommit = hook.onError((EDBCommit)commit, exception);
 				
-				if(commit instanceof EDBStageCommit)
-					newCommit = hook.onError((EDBStageCommit)commit, exception);
+				/*if(commit instanceof EDBStageCommit)
+					newCommit = hook.onError((EDBStageCommit)commit, exception);*/
 				
                 if (newCommit != null) {
                     return commit(newCommit);
@@ -233,8 +232,8 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
                 if(commit instanceof EDBCommit)
 					hook.onPostCommit((EDBCommit)commit);
 				
-				if(commit instanceof EDBStageCommit)
-					hook.onPostCommit((EDBStageCommit)commit);
+				/*if(commit instanceof EDBStageCommit)
+					hook.onPostCommit((EDBStageCommit)commit);*/
             } catch (ServiceUnavailableException e) {
                 // Ignore
             } catch (Exception e) {

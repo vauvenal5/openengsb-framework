@@ -26,12 +26,21 @@ import java.util.Map;
  */
 @SuppressWarnings("serial")
 public class EDBObject extends EDBBaseObject<EDBObjectEntry> {
-    /**
+    
+	private EDBStage stage;
+	
+	/**
      * Create an EDBObject with a specified OID.
      */
     public EDBObject(String oid) {
         super(oid);
+		this.stage = null;
     }
+	
+	public EDBObject(String oid, EDBStage stage){
+		super(oid);
+		this.stage = stage;
+	}
 
     /**
      * Create an EDBObject using a Map of data. The OID is stored after loading the data Map, so any already existing
@@ -65,5 +74,13 @@ public class EDBObject extends EDBBaseObject<EDBObjectEntry> {
 	@Override
 	public void putEntry(String key, Object value, String type) {
 		put(key, new EDBObjectEntry(key, value, type));
+	}
+	
+	public void setEDBStage(EDBStage stage) {
+		this.stage = stage;
+	}
+	
+	public EDBStage getEDBStage(){
+		return this.stage;
 	}
 }

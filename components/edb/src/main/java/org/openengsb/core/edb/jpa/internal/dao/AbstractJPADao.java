@@ -281,7 +281,14 @@ public abstract class AbstractJPADao
             Subquery<Number> subquery = query.subquery(Number.class);
             Root maxTime = subquery.from(type);
             subquery.select(criteriaBuilder.max(maxTime.get("timestamp")));
-            subquery.where(criteriaBuilder.le(maxTime.get("timestamp"), timestamp), checkSid(criteriaBuilder, maxTime, sid, null));
+            subquery.where(criteriaBuilder.le(maxTime.get("timestamp"), timestamp));
+			
+			Predicate stagePred = checkSid(criteriaBuilder, maxTime, sid, null);
+			
+			if(stagePred != null)
+			{
+				subquery.where(stagePred);
+			}
 			
 			query.where(criteriaBuilder.equal(from.get("timestamp"), subquery));
 			

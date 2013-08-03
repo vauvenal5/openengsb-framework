@@ -21,25 +21,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 @Entity
 public class JPACommit extends JPABaseCommit<EDBObject> implements EDBCommit {
-
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Column(name="STAGE",nullable = true)
+	private JPAStage stage;
+	
 	/**
      * the empty constructor is only for the jpa enhancer. Do not use it in real code.
      */
@@ -50,5 +58,18 @@ public class JPACommit extends JPABaseCommit<EDBObject> implements EDBCommit {
 	
 	public JPACommit(String committer, String contextId) {
 		super(committer, contextId);
+		this.stage = null;
+	}
+
+	@Override
+	public EDBStage getEDBStage()
+	{
+		return this.stage;
+	}
+
+	@Override
+	public void setEDBStage(EDBStage stage)
+	{
+		this.stage = (JPAStage)stage;
 	}
 }

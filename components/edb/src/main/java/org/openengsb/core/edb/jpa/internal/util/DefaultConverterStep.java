@@ -22,9 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.openengsb.core.edb.api.EDBObjectEntry;
-import org.openengsb.core.edb.api.EDBStageObjectEntry;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
-import org.openengsb.core.edb.jpa.internal.JPAStageEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
@@ -117,16 +115,16 @@ public class DefaultConverterStep implements EDBConverterStep {
         }
     }
 
-	@Override
-	public JPAStageEntry convertToJPAEntry(EDBStageObjectEntry entry)
-	{
-		return new JPAStageEntry(entry);
-	}
-
-	@Override
-	public EDBStageObjectEntry convertToEDBObjectEntry(JPAStageEntry entry)
-	{
-		return new EDBStageObjectEntry(entry.getStageId(), entry.getKey(), entry.getValue(), entry.getType());
-	}
+//	@Override
+//	public JPAStageEntry convertToJPAEntry(EDBStageObjectEntry entry)
+//	{
+//		return new JPAStageEntry(entry);
+//	}
+//
+//	@Override
+//	public EDBStageObjectEntry convertToEDBObjectEntry(JPAStageEntry entry)
+//	{
+//		return new EDBStageObjectEntry(entry.getStageId(), entry.getKey(), entry.getValue(), entry.getType());
+//	}
 
 }

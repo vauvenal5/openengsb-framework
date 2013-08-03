@@ -37,8 +37,6 @@ import org.openengsb.core.edb.jpa.internal.JPABaseCommit;
 import org.openengsb.core.edb.jpa.internal.JPACommit;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
-import org.openengsb.core.edb.jpa.internal.JPAStageCommit;
-import org.openengsb.core.edb.jpa.internal.JPAStageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +59,7 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
 	@Override
 	public JPAHead getStagedJPAHead(long timestamp, String sid) throws EDBException
 	{
-		return super.getJPAHead(JPAStageObject.class, sid, timestamp);
+		return super.getJPAHead(JPAObject.class, sid, timestamp);
 	}
 
     @Override
@@ -71,9 +69,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageObject> getStagedJPAObjectHistory(String oid, String sid) throws EDBException
+	public List<JPAObject> getStagedJPAObjectHistory(String oid, String sid) throws EDBException
 	{
-		return super.getJPAObjectHistory(JPAStageObject.class, oid, sid);
+		return super.getJPAObjectHistory(JPAObject.class, oid, sid);
 	}
 
     @Override
@@ -83,9 +81,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageObject> getStagedJPAObjectHistory(String oid, String sid, long from, long to) throws EDBException
+	public List<JPAObject> getStagedJPAObjectHistory(String oid, String sid, long from, long to) throws EDBException
 	{
-		return super.getJPAObjectHistory(JPAStageObject.class, oid, sid, from, to);
+		return super.getJPAObjectHistory(JPAObject.class, oid, sid, from, to);
 	}
 	
 	
@@ -98,8 +96,8 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
 	
 	@Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public JPAStageObject getStagedJPAObject(String oid, String sid, long timestamp) throws EDBException {
-        return getJPAObject(JPAStageObject.class, oid, sid, timestamp);
+    public JPAObject getStagedJPAObject(String oid, String sid, long timestamp) throws EDBException {
+        return getJPAObject(JPAObject.class, oid, sid, timestamp);
     }
 
     @Override
@@ -111,7 +109,7 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-    public JPAStageObject getStagedJPAObject(String oid, String sid) throws EDBException {
+    public JPAObject getStagedJPAObject(String oid, String sid) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading newest object {} from stage {}", oid, sid);
             return getStagedJPAObject(oid, sid, System.currentTimeMillis());
@@ -125,9 +123,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageObject> getStagedJPAObjects(List<String> oids, String sid) throws EDBException
+	public List<JPAObject> getStagedJPAObjects(List<String> oids, String sid) throws EDBException
 	{
-		return super.getJPAObjects(JPAStageObject.class, oids, sid);
+		return super.getJPAObjects(JPAObject.class, oids, sid);
 	}
 
     @Override
@@ -137,9 +135,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageCommit> getStagedJPACommit(String oid, String sid, long from, long to) throws EDBException
+	public List<JPACommit> getStagedJPACommit(String oid, String sid, long from, long to) throws EDBException
 	{
-		return super.getJPACommit(JPAStageCommit.class, JPAStageObject.class, oid, sid, from, to);
+		return super.getJPACommit(JPACommit.class, JPAObject.class, oid, sid, from, to);
 	}
 	
 	
@@ -153,7 +151,7 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
 	@Override
 	public List<String> getStagedResurrectedOIDs(String sid) throws EDBException
 	{
-		return super.getResurrectedOIDs(JPAStageObject.class, sid);
+		return super.getResurrectedOIDs(JPAObject.class, sid);
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -164,9 +162,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageCommit> getStagedJPACommit(long timestamp, String sid) throws EDBException
+	public List<JPACommit> getStagedJPACommit(long timestamp, String sid) throws EDBException
 	{
-		return super.getJPACommit(JPAStageCommit.class, timestamp, sid);
+		return super.getJPACommit(JPACommit.class, timestamp, sid);
 	}
 
     @Override
@@ -175,9 +173,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageCommit> getStagedCommits(Map<String, Object> param, String sid) throws EDBException
+	public List<JPACommit> getStagedCommits(Map<String, Object> param, String sid) throws EDBException
 	{
-		return super.getCommits(JPAStageCommit.class, param, sid);
+		return super.getCommits(JPACommit.class, param, sid);
 	}
 
     @Override
@@ -186,9 +184,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public JPAStageCommit getLastStagedCommit(Map<String, Object> param, String sid) throws EDBException
+	public JPACommit getLastStagedCommit(Map<String, Object> param, String sid) throws EDBException
 	{
-		return super.getLastCommit(JPAStageCommit.class, param, sid);
+		return super.getLastCommit(JPACommit.class, param, sid);
 	}
 
     @Override
@@ -197,9 +195,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageObject> queryStaged(Map<String, Object> values, String sid) throws EDBException
+	public List<JPAObject> queryStaged(Map<String, Object> values, String sid) throws EDBException
 	{
-		return super.query(JPAStageObject.class, values, sid);
+		return super.query(JPAObject.class, values, sid);
 	}
 
     @Override
@@ -220,9 +218,9 @@ public class DefaultJPADao extends AbstractJPADao implements JPADao {
     }
 	
 	@Override
-	public List<JPAStageObject> queryStaged(Map<String, Object> values, String sid, Long timestamp) throws EDBException
+	public List<JPAObject> queryStaged(Map<String, Object> values, String sid, Long timestamp) throws EDBException
 	{
-		return super.query(JPAStageObject.class, values, timestamp, sid);
+		return super.query(JPAObject.class, values, timestamp, sid);
 	}
 
     public void setEntityManager(EntityManager entityManager) {

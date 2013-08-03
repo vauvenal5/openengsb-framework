@@ -28,4 +28,6 @@ import java.util.UUID;
  * throws an exception if you want to commit it again.
  */
 public interface EDBCommit extends EDBBaseCommit<EDBObject> {
+	EDBStage getEDBStage();
+	void setEDBStage(EDBStage stage);
 }

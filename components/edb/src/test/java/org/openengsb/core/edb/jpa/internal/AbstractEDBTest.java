@@ -37,7 +37,6 @@ import org.openengsb.core.api.security.AuthenticationContext;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.api.EDBObjectEntry;
-import org.openengsb.core.edb.api.EDBStageCommit;
 import org.openengsb.core.edb.api.hooks.EDBPreCommitHook;
 import org.openengsb.core.edb.jpa.internal.dao.DefaultJPADao;
 import org.openengsb.core.edb.jpa.internal.dao.JPADao;
@@ -78,9 +77,9 @@ public class AbstractEDBTest {
         return db.createEDBCommit(null, null, null);
     }
 	
-	protected EDBStageCommit getEDBStageCommit() {
-		return db.createEDBStageCommit(null, null, null, null);
-	}
+//	protected EDBStageCommit getEDBStageCommit() {
+//		return db.createEDBStageCommit(null, null, null, null);
+//	}
 
     /**
      * Creates a new commit object, adds the given inserts, updates and deletes and commit it.
