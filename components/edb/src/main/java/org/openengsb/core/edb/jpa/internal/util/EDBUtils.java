@@ -27,6 +27,7 @@ import org.openengsb.core.edb.api.EDBObjectEntry;
 import org.openengsb.core.edb.jpa.internal.JPABaseObject;
 import org.openengsb.core.edb.jpa.internal.JPAEntry;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
+import org.openengsb.core.edb.jpa.internal.JPAStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,6 +148,7 @@ public final class EDBUtils {
 		if(object instanceof EDBObject) {
 			result = new JPAObject();
 			result.setEntries(EDBUtils.convertEDBObjectEntriesToJPAEntries((EDBObject)object));
+			((JPAObject)result).setJPAStage((JPAStage)((EDBObject)object).getEDBStage());
 		}
 //		else {
 //			result = new JPAStageObject();

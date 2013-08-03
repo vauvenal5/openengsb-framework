@@ -38,7 +38,7 @@ public interface EngineeringDatabaseService {
      */
     EDBObject getObject(String oid) throws EDBException;
 	
-	//EDBStageObject getStagedObject(String oid, String sid) throws EDBException;
+	EDBObject getStagedObject(String oid, String sid) throws EDBException;
 	
     /**
      * Retrieve the current state of the objects with the specified OIDs.
