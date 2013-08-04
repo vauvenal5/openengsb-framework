@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import org.openengsb.core.edb.api.EDBBaseCommit;
-import org.openengsb.core.edb.api.EDBBaseObject;
 
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
@@ -63,7 +61,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     /**
      * Performs the actual commit logic for the EDB, including the hooks and the revision checking.
      */
-    protected Long performCommitLogic(EDBBaseCommit commit) throws EDBException {
+    protected Long performCommitLogic(EDBCommit commit) throws EDBException {
         if (commit.isCommitted()) {
             throw new EDBException("EDBCommit is already commitet.");
         }
@@ -86,7 +84,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * Does the actual commit work (JPA related actions) and returns the timestamp when the commit was done. Throws an
      * EDBException if an error occurs.
      */
-    private Long performCommit(EDBBaseCommit commit) throws EDBException {
+    private Long performCommit(EDBCommit commit) throws EDBException {
         synchronized (entityManager) {
             long timestamp = System.currentTimeMillis();
             try {
@@ -108,7 +106,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     /**
      * Add all the changes which are done through the given commit object to the entity manager.
      */
-    private void persistCommitChanges(EDBBaseCommit commit, Long timestamp) {
+    private void persistCommitChanges(EDBCommit commit, Long timestamp) {
         commit.setTimestamp(timestamp);
         addModifiedObjectsToEntityManager(commit.getObjects(), timestamp);
         commit.setCommitted(true);
@@ -121,8 +119,8 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     /**
      * Updates all modified EDBObjects with the timestamp and persist them through the entity manager.
      */
-    private void addModifiedObjectsToEntityManager(List<EDBBaseObject> modified, Long timestamp) {
-        for (EDBBaseObject update : modified) {
+    private void addModifiedObjectsToEntityManager(List<EDBObject> modified, Long timestamp) {
+        for (EDBObject update : modified) {
             update.updateTimestamp(timestamp);
             entityManager.persist(EDBUtils.convertEDBObjectToJPAObject(update));
         }
@@ -133,10 +131,10 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      */
     private void updateDeletedObjectsThroughEntityManager(List<String> oids, Long timestamp) {
         for (String id : oids) {
-            EDBBaseObject o = new EDBObject(id);
+            EDBObject o = new EDBObject(id);
             o.updateTimestamp(timestamp);
             o.setDeleted(true);
-            JPABaseObject j = EDBUtils.convertEDBObjectToJPAObject(o);
+            JPAObject j = EDBUtils.convertEDBObjectToJPAObject(o);
             entityManager.persist(j);
         }
     }
@@ -146,7 +144,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * for ServiceUnavailableExceptions and EDBExceptions. If an EDBException occurs, it is thrown and so returned to
      * the calling instance.
      */
-    private void runBeginCommitHooks(EDBBaseCommit commit) throws EDBException {
+    private void runBeginCommitHooks(EDBCommit commit) throws EDBException {
         for (EDBBeginCommitHook hook : beginCommitHooks) {
             try {
 				if(commit instanceof EDBCommit)
@@ -169,7 +167,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * for ServiceUnavailableExceptions and EDBExceptions. If an EDBException occurs, the function returns this
      * exception.
      */
-    private EDBException runPreCommitHooks(EDBBaseCommit commit) {
+    private EDBException runPreCommitHooks(EDBCommit commit) {
         EDBException exception = null;
         for (EDBPreCommitHook hook : preCommitHooks) {
             try {				
@@ -192,7 +190,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * the error with the new Exception. If an error hook returns a new EDBCommit, the EDB tries to persist this commit
      * instead.
      */
-    private Long runErrorHooks(EDBBaseCommit commit, EDBException exception) throws EDBException {
+    private Long runErrorHooks(EDBCommit commit, EDBException exception) throws EDBException {
         for (EDBErrorHook hook : errorHooks) {
             try {
                 EDBCommit newCommit = null;
@@ -222,7 +220,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * Runs all registered post commit hooks on the EDBCommit object. Logs exceptions which occurs in the hooks, except
      * for ServiceUnavailableExceptions.
      */
-    private void runEDBPostHooks(EDBBaseCommit commit) {
+    private void runEDBPostHooks(EDBCommit commit) {
         for (EDBPostCommitHook hook : postCommitHooks) {
             try {
                 if(commit instanceof EDBCommit)

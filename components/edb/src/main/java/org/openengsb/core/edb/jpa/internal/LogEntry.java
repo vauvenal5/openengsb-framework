@@ -17,8 +17,6 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
-import org.openengsb.core.edb.api.EDBBaseCommit;
-import org.openengsb.core.edb.api.EDBBaseObject;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBLogEntry;
 import org.openengsb.core.edb.api.EDBObject;

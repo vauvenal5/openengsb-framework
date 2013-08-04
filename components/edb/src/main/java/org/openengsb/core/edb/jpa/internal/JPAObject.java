@@ -26,6 +26,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import org.apache.openjpa.persistence.jdbc.Index;
 
 
 /**
@@ -34,8 +35,15 @@ import javax.persistence.OneToOne;
  */
 @SuppressWarnings("serial")
 @Entity
-public class JPAObject extends JPABaseObject<JPAEntry> {
+public class JPAObject extends VersionedEntity {
 	
+	@Column(name = "TIME")
+    protected Long timestamp;
+    @Column(name = "ISDELETED")
+    protected Boolean isDeleted;
+    @Index
+    @Column(name = "OID")
+    protected String oid;   
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@Column(name="STAGE",nullable = true)
 	private JPAStage stage;
@@ -44,15 +52,13 @@ public class JPAObject extends JPABaseObject<JPAEntry> {
     protected List<JPAEntry> entries;
 	
     public JPAObject(){
-        super();
+        isDeleted = false;
     }
 	
-	@Override
 	public List<JPAEntry> getEntries() {
         return entries;
     }
     
-	@Override
     public void setEntries(List<JPAEntry> entries) {
         this.entries = entries;
     } 
@@ -64,4 +70,28 @@ public class JPAObject extends JPABaseObject<JPAEntry> {
 	public JPAStage getJPAStage(){
 		return this.stage;
 	}
+    
+    public Boolean isDeleted() {
+        return isDeleted;
+    }
+    
+    public void setDeleted(Boolean deleted) {
+        this.isDeleted = deleted;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+    
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getOID() {
+        return oid;
+    }
+
+    public void setOID(String oid) {
+        this.oid = oid;
+    }
 }

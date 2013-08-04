@@ -18,27 +18,25 @@
 package org.openengsb.core.edb.jpa.internal;
 
 import java.util.List;
-import org.openengsb.core.edb.api.EDBBaseObject;
-
 import org.openengsb.core.edb.api.EDBObject;
 import org.openengsb.core.edb.jpa.internal.util.EDBUtils;
 
 /**
  * A JPA Head contains all JPAObjects which are bound to a specific timestamp.
  */
-public class JPAHead<J extends JPABaseObject, E extends EDBBaseObject> {
-    private List<J> objects;
+public class JPAHead {
+    private List<JPAObject> objects;
     private Long timestamp;
     
-    public List<E> getEDBObjects() {
-        return EDBUtils.convertJPAObjectsToEDBObjects(objects);
+    public List<EDBObject> getEDBObjects() {
+        return EDBUtils.convertJPAObjectsToEDBObjects(this.objects);
     }
     
-    public void setJPAObjects(List<J> objects) {
+    public void setJPAObjects(List<JPAObject> objects) {
         this.objects = objects;
     }
 
-    public List<J> getJPAObjects() {
+    public List<JPAObject> getJPAObjects() {
         return objects;
     }
     

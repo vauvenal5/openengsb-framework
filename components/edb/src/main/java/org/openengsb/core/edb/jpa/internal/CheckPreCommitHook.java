@@ -19,7 +19,6 @@ package org.openengsb.core.edb.jpa.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.openengsb.core.edb.api.EDBBaseObject;
 
 import org.openengsb.core.edb.api.EDBCheckException;
 import org.openengsb.core.edb.api.EDBCommit;
@@ -62,7 +61,7 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         if (commit.getUpdates() != null) {
             updateFails = checkUpdates(commit.getUpdates());
         }
-        testIfExceptionNeeded((List<EDBBaseObject>)(List<?>)insertFails, (List<EDBBaseObject>)(List<?>)updateFails, deleteFails);
+        testIfExceptionNeeded((List<EDBObject>)(List<?>)insertFails, (List<EDBObject>)(List<?>)updateFails, deleteFails);
     }
 	
 	/*@Override
@@ -88,14 +87,14 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
      * Checks all lists with failed objects if there is the need to throw an EDBCheckException. If the need is given, it
      * creates this exception and throws it.
      */
-    private void testIfExceptionNeeded(List<EDBBaseObject> insertFails, List<EDBBaseObject> updateFails,
+    private void testIfExceptionNeeded(List<EDBObject> insertFails, List<EDBObject> updateFails,
             List<String> deleteFails) throws EDBCheckException {
         StringBuilder builder = new StringBuilder();
 
-        for (EDBBaseObject insert : insertFails) {
+        for (EDBObject insert : insertFails) {
             builder.append("Object with the oid ").append(insert.getOID()).append(" exists already. ");
         }
-        for (EDBBaseObject update : updateFails) {
+        for (EDBObject update : updateFails) {
             builder.append("Found a conflict for the oid ").append(update.getOID()).append(". ");
         }
         for (String delete : deleteFails) {
@@ -209,7 +208,7 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
     /**
      * Investigates the version of an EDBObject and checks if a conflict can be found.
      */
-    private Integer investigateVersionAndCheckForConflict(EDBBaseObject newObject) throws EDBException {
+    private Integer investigateVersionAndCheckForConflict(EDBObject newObject) throws EDBException {
         Integer modelVersion = (Integer)newObject.getObject(EDBConstants.MODEL_VERSION, Integer.class);
         String oid = newObject.getOID();
 
