@@ -63,25 +63,6 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         }
         testIfExceptionNeeded((List<EDBObject>)(List<?>)insertFails, (List<EDBObject>)(List<?>)updateFails, deleteFails);
     }
-	
-	/*@Override
-	public void onPreCommit(EDBStageCommit commit) throws EDBException
-	{
-		List<EDBStageObject> insertFails = null;
-        List<EDBStageObject> updateFails = null;
-        List<String> deleteFails = null;
-
-        if (commit.getInserts() != null) {
-            insertFails = checkInsertsInStage(commit.getInserts());
-        }
-        if (commit.getDeletions() != null) {
-            deleteFails = checkDeletions(commit.getDeletions(), commit.getStage().getStageId());
-        }
-        if (commit.getUpdates() != null) {
-            updateFails = checkUpdatesInStage(commit.getUpdates());
-        }
-        testIfExceptionNeeded((List<EDBBaseObject>)(List<?>)insertFails, (List<EDBBaseObject>)(List<?>)updateFails, deleteFails);
-	}*/
 
     /**
      * Checks all lists with failed objects if there is the need to throw an EDBCheckException. If the need is given, it
@@ -126,20 +107,6 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         return failedObjects;
     }
 	
-	/*private List<EDBStageObject> checkInsertsInStage(List<EDBStageObject> inserts) {
-        List<EDBStageObject> failedObjects = new ArrayList<EDBStageObject>();
-        for (EDBStageObject insert : inserts) {
-            String oid = insert.getOID();
-			String sid = insert.getStageId();
-            if (checkIfActiveOidExistingInStage(oid, sid)) {
-                failedObjects.add(insert);
-            } else {
-                insert.putEntry(EDBConstants.MODEL_VERSION, Integer.valueOf(1));
-            }
-        }
-        return failedObjects;
-    }*/
-	
 	private String checkStage(EDBStage stage)
 	{
 		if(stage != null)
@@ -163,16 +130,6 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         }
         return failedObjects;
     }
-	
-	/*private List<String> checkDeletions(List<String> deletes, String sid) {
-        List<String> failedObjects = new ArrayList<String>();
-        for (String delete : deletes) {
-            if (!checkIfActiveOidExistingInStage(delete, sid)) {
-                failedObjects.add(delete);
-            }
-        }
-        return failedObjects;
-    }*/
 
     /**
      * Checks every update for a potential conflict. Returns a list of objects where a conflict has been found.
@@ -190,36 +147,19 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         }
         return failedObjects;
     }
-	
-	/*private List<EDBStageObject> checkUpdatesInStage(List<EDBStageObject> updates) throws EDBException {
-        List<EDBStageObject> failedObjects = new ArrayList<EDBStageObject>();
-        for (EDBStageObject update : updates) {
-            try {
-                Integer modelVersion = investigateVersionAndCheckForConflict(update);
-                modelVersion++;
-                update.putEntry(EDBConstants.MODEL_VERSION, modelVersion);
-            } catch (EDBException e) {
-                failedObjects.add(update);
-            }
-        }
-        return failedObjects;
-    }*/
 
     /**
      * Investigates the version of an EDBObject and checks if a conflict can be found.
      */
-    private Integer investigateVersionAndCheckForConflict(EDBObject newObject) throws EDBException {
+	 private Integer investigateVersionAndCheckForConflict(EDBObject newObject) throws EDBException {
         Integer modelVersion = (Integer)newObject.getObject(EDBConstants.MODEL_VERSION, Integer.class);
         String oid = newObject.getOID();
 
         if (modelVersion != null) {
-            Integer currentVersion = getVersionOfOid(oid);
+            Integer currentVersion = getVersionOfOid(oid, checkStage(newObject.getEDBStage()));
             if (!modelVersion.equals(currentVersion)) {
                 try {
-					if(newObject instanceof EDBObject)
-						checkForConflict((EDBObject)newObject);
-					//else
-						//checkForConflict((EDBStageObject)newObject);
+					checkForConflict(newObject);
                 } catch (EDBException e) {
                     LOGGER.info("conflict detected, user get informed");
                     throw new EDBException("conflict was detected. There is a newer version of the model with the oid "
@@ -228,7 +168,7 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
                 modelVersion = currentVersion;
             }
         } else {
-            modelVersion = getVersionOfOid(oid);
+            modelVersion = getVersionOfOid(oid, checkStage(newObject.getEDBStage()));
         }
 
         return modelVersion;
@@ -245,15 +185,6 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
 			checkEntryForConflict(entry, object.getObject(entry.getKey()));
         }
     }
-	
-	/*private void checkForConflict(EDBStageObject newObject) throws EDBException {
-        String oid = newObject.getOID();
-		String sid = newObject.getStageId();
-        EDBStageObject object = getObject(oid, sid);
-        for (EDBObjectEntry entry : newObject.values()) {
-			checkEntryForConflict(entry, object.getObject(entry.getKey()));
-        }
-    }*/
 	
 	private void checkEntryForConflict(EDBObjectEntry entry, Object value) throws EDBException {
 			if (entry.getKey().equals(EDBConstants.MODEL_VERSION)) {
@@ -282,18 +213,6 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         }
         return false;
     }
-	
-	/*private boolean checkIfActiveOidExistingInStage(String oid, String sid) {
-        try {
-            EDBStageObject obj = getObject(oid, sid);
-            if (!obj.isDeleted()) {
-                return true;
-            }
-        } catch (EDBException e) {
-            // nothing to do here
-        }
-        return false;
-    }*/
 
     /**
      * Loads the EDBObject for the given oid.
@@ -302,19 +221,11 @@ public class CheckPreCommitHook implements EDBPreCommitHook {
         JPAObject temp = dao.getJPAObject(oid, sid);
         return EDBUtils.convertJPAObjectToEDBObject(temp);
     }
-	
-	/**
-     * Loads the EDBStageObject for the given oid and sid.
-     */
-    /*private EDBStageObject getObject(String oid, String sid) throws EDBException {
-        JPAStageObject temp = dao.getStagedJPAObject(oid, sid);
-        return EDBUtils.convertJPAObjectToEDBObject(temp);
-    }*/
 
     /**
      * Loads the actual version of a model with the given oid.
      */
-    private Integer getVersionOfOid(String oid) throws EDBException {
-        return dao.getVersionOfOid(oid);
+	private Integer getVersionOfOid(String oid, String sid) throws EDBException {
+        return dao.getVersionOfOid(oid, sid);
     }
 }

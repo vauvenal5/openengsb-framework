@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import org.openengsb.core.edb.api.EDBCommit;
 import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.api.EDBObject;
+import org.openengsb.core.edb.api.EDBStage;
 import org.openengsb.core.edb.api.EngineeringDatabaseService;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
@@ -66,7 +67,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
             throw new EDBException("EDBCommit is already commitet.");
         }
         if (revisionCheckEnabled && commit.getParentRevisionNumber() != null
-                && !commit.getParentRevisionNumber().equals(getCurrentRevisionNumber())) {
+                && !commit.getParentRevisionNumber().equals(getCurrentRevisionNumber(commit.getEDBStage()))) {
             throw new EDBException("EDBCommit do not have the correct head revision number.");
         }
         runBeginCommitHooks(commit);
@@ -113,7 +114,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
         logger.debug("persisting JPACommit");
         entityManager.persist(commit);
         logger.debug("mark the deleted elements as deleted");
-        updateDeletedObjectsThroughEntityManager(commit.getDeletions(), timestamp);
+        updateDeletedObjectsThroughEntityManager(commit.getDeletions(), timestamp, commit.getEDBStage());
     }
 
     /**
@@ -130,8 +131,12 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
      * Updates all deleted objects with the timestamp, mark them as deleted and persist them through the entity manager.
      */
     private void updateDeletedObjectsThroughEntityManager(List<String> oids, Long timestamp) {
+        this.updateDeletedObjectsThroughEntityManager(oids, timestamp, null);
+    }
+	
+	private void updateDeletedObjectsThroughEntityManager(List<String> oids, Long timestamp, EDBStage stage) {
         for (String id : oids) {
-            EDBObject o = new EDBObject(id);
+            EDBObject o = new EDBObject(id, stage);
             o.updateTimestamp(timestamp);
             o.setDeleted(true);
             JPAObject j = EDBUtils.convertEDBObjectToJPAObject(o);
@@ -147,11 +152,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     private void runBeginCommitHooks(EDBCommit commit) throws EDBException {
         for (EDBBeginCommitHook hook : beginCommitHooks) {
             try {
-				if(commit instanceof EDBCommit)
-					hook.onStartCommit((EDBCommit)commit);
-				
-				/*if(commit instanceof EDBStageCommit)
-					hook.onStartCommit((EDBStageCommit)commit);*/
+				hook.onStartCommit((EDBCommit)commit);
             } catch (ServiceUnavailableException e) {
                 // Ignore
             } catch (EDBException e) {
@@ -193,14 +194,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     private Long runErrorHooks(EDBCommit commit, EDBException exception) throws EDBException {
         for (EDBErrorHook hook : errorHooks) {
             try {
-                EDBCommit newCommit = null;
-				
-				if(commit instanceof EDBCommit)
-					newCommit = hook.onError((EDBCommit)commit, exception);
-				
-				/*if(commit instanceof EDBStageCommit)
-					newCommit = hook.onError((EDBStageCommit)commit, exception);*/
-				
+                EDBCommit newCommit = hook.onError(commit, exception);
                 if (newCommit != null) {
                     return commit(newCommit);
                 }
@@ -223,11 +217,7 @@ public abstract class AbstractEDBService implements EngineeringDatabaseService {
     private void runEDBPostHooks(EDBCommit commit) {
         for (EDBPostCommitHook hook : postCommitHooks) {
             try {
-                if(commit instanceof EDBCommit)
-					hook.onPostCommit((EDBCommit)commit);
-				
-				/*if(commit instanceof EDBStageCommit)
-					hook.onPostCommit((EDBStageCommit)commit);*/
+				hook.onPostCommit(commit);
             } catch (ServiceUnavailableException e) {
                 // Ignore
             } catch (Exception e) {
