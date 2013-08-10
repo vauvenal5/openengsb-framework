@@ -43,9 +43,6 @@ public class JPAEntry extends VersionedEntity {
     private String value;
     @Column(name = "TYPE")
     private String type;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@Column(name="STAGE",nullable = true)
-	private JPAStage stage;
 
     public JPAEntry() {
         key = "";
@@ -87,12 +84,4 @@ public class JPAEntry extends VersionedEntity {
     public void setType(String type) {
         this.type = type;
     }
-	
-	public void setJPAStage(JPAStage stage){
-		this.stage = stage;
-	}
-	
-	public JPAStage getJPAStage(){
-		return this.stage;
-	}
 }

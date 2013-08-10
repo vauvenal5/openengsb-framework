@@ -30,6 +30,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -46,33 +47,33 @@ public class JPACommit extends VersionedEntity implements EDBCommit {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JPACommit.class);
 
     @Column(name = "COMMITER", length = 50)
-    protected String committer;
+    private String committer;
     @Column(name = "TIME")
-    protected Long timestamp;
+    private Long timestamp;
     @Column(name = "CONTEXT", length = 50)
-    protected String context;
+    private String context;
     @Column(name = "DELS")
     @ElementCollection
-    protected List<String> deletions;
+    private List<String> deletions;
     @Column(name = "OIDS")
     @ElementCollection
-    protected List<String> oids;
+    private List<String> oids;
     @Column(name = "ISCOMMITED")
-    protected Boolean committed = false;
+    private Boolean committed = false;
     @Column(name = "REVISION")
-    protected String revision;
+    private String revision;
     @Column(name = "PARENT")
-    protected String parent;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private String parent;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@Column(name="STAGE",nullable = true)
 	private JPAStage stage;
 
-    protected List<EDBObject> objects;
+    private List<EDBObject> objects;
 
     @Transient
-    protected List<EDBObject> inserts;
+    private List<EDBObject> inserts;
     @Transient
-    protected List<EDBObject> updates;
+    private List<EDBObject> updates;
 	
 	
 	/**
