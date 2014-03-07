@@ -17,12 +17,12 @@
 
 package org.openengsb.core.ekb.api;
 
+import org.openengsb.core.api.model.OpenEngSBModel;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
-import org.openengsb.core.api.model.OpenEngSBModel;
 
 /**
  * The EKBCommit class contains all necessary information to do a commit to the EDB through the EKB PersistInterface.
@@ -37,6 +37,7 @@ public class EKBCommit {
     private String comment;
     private UUID revisionNumber;
     private UUID parentRevisionNumber;
+    private String stageId;
 
     public EKBCommit() {
         inserts = new ArrayList<OpenEngSBModel>();
@@ -220,4 +221,8 @@ public class EKBCommit {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public void setStageId(String stageId) { this.stageId = stageId; }
+
+    public String getStageId() { return this.stageId; }
 }
