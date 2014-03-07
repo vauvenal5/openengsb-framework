@@ -17,9 +17,6 @@
 
 package org.openengsb.core.edb.jpa.internal.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
@@ -27,6 +24,9 @@ import org.openengsb.core.edb.api.EDBException;
 import org.openengsb.core.edb.jpa.internal.JPACommit;
 import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a dao interface for connection to the JPA Database
@@ -61,7 +61,7 @@ public interface JPADao {
     /**
      * Returns the history (between from and to) of a given object from the given stage.
      */
-    List<JPAObject> getJPAObjectHistory(String oid, String sid, long from, long to) throws EDBException;
+    List<JPAObject> getJPAObjectHistory(String oid, long from, long to, String sid) throws EDBException;
 
     /**
      * Returns a JPAObject with the given timestamp
@@ -71,7 +71,7 @@ public interface JPADao {
     /**
      * Returns a staged JPAObject with the given timestamp
      */
-    JPAObject getJPAObject(String oid, String sid, long timestamp) throws EDBException;
+    JPAObject getJPAObject(String oid, long timestamp, String sid) throws EDBException;
     
     /**
      * Returns the newest JPAObject with the given oid
@@ -102,7 +102,7 @@ public interface JPADao {
      * Returns all commits which are involved with the given oid which are between from and to 
      * and in the given stage
      */
-    List<JPACommit> getJPACommit(String oid, String sid, long from, long to) throws EDBException;
+    List<JPACommit> getJPACommit(String oid, long from, long to, String sid) throws EDBException;
     
     /**
      * Returns the commit object for the given revision string. Throws an EDBException in case of no commit present for

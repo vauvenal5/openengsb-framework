@@ -17,28 +17,20 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.openengsb.core.api.context.ContextHolder;
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
 import org.openengsb.core.api.security.AuthenticationContext;
-import org.openengsb.core.edb.api.EDBCommit;
-import org.openengsb.core.edb.api.EDBException;
-import org.openengsb.core.edb.api.EDBLogEntry;
-import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EDBStage;
+import org.openengsb.core.edb.api.*;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
 import org.openengsb.core.edb.api.hooks.EDBPostCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBPreCommitHook;
 import org.openengsb.core.edb.jpa.internal.dao.JPADao;
 import org.openengsb.core.edb.jpa.internal.util.EDBUtils;
+
+import java.util.*;
 
 /**
  * The implementation of the EngineeringDatabaseService, extending the AbstractEDBService
@@ -77,8 +69,13 @@ public class EDBService extends AbstractEDBService {
 
     @Override
     public EDBObject getObject(String oid, Long timestamp) throws EDBException {
+        return this.getObject(oid, timestamp, null);
+    }
+
+    @Override
+    public EDBObject getObject(String oid, Long timestamp, String sid) throws EDBException {
         getLogger().debug("loading JPAObject with the oid {} for timestamp {}", oid, timestamp);
-        JPAObject temp = dao.getJPAObject(oid, timestamp);
+        JPAObject temp = dao.getJPAObject(oid, timestamp, sid);
         return EDBUtils.convertJPAObjectToEDBObject(temp);
     }
 
@@ -114,7 +111,7 @@ public class EDBService extends AbstractEDBService {
     public List<EDBObject> getHistoryForTimeRange(String oid, Long from, Long to, String sid) throws EDBException {
         getLogger().debug("loading JPAObject with the oid {} and sid {} from "
                 + "the timestamp {} to the timestamp {}", new Object[]{oid, sid, from, to});
-        List<JPAObject> objects = dao.getJPAObjectHistory(oid, sid, from, to);
+        List<JPAObject> objects = dao.getJPAObjectHistory(oid, from, to, sid);
         return EDBUtils.convertJPAObjectsToEDBObjects(objects);
     }
 
@@ -128,7 +125,7 @@ public class EDBService extends AbstractEDBService {
         getLogger().debug("loading the log of JPAObject with the oid {}, sid {} from timestamp {} to {}", 
                 new Object[]{oid, sid, from, to});
         List<EDBObject> history = getHistoryForTimeRange(oid, from, to, sid);
-        List<JPACommit> commits = dao.getJPACommit(oid, sid, from, to);
+        List<JPACommit> commits = dao.getJPACommit(oid, from, to, sid);
         if (history.size() != commits.size()) {
             throw new EDBException("inconsistent log " + Integer.toString(commits.size()) + " commits for "
                     + Integer.toString(history.size()) + " history entries");
@@ -240,18 +237,24 @@ public class EDBService extends AbstractEDBService {
 
     @Override
     public UUID getCurrentRevisionNumber() throws EDBException {
-        return this.getCurrentRevisionNumber(null);
+        return this.getCurrentRevisionNumber((String)null);
     }
 
     @Override
     public UUID getCurrentRevisionNumber(EDBStage stage) throws EDBException {
         String sid = null;
+
         if (stage != null) {
             sid = stage.getStageId();
         }
 
+        return this.getCurrentRevisionNumber(sid);
+    }
+
+    @Override
+    public UUID getCurrentRevisionNumber(String stageId) throws EDBException {
         try {
-            return getCommit(System.currentTimeMillis(), sid).getRevisionNumber();
+            return getCommit(System.currentTimeMillis(), stageId).getRevisionNumber();
         } catch (EDBException e) {
             getLogger().debug("There was no commit so far, so the current revision number is null");
             return null;

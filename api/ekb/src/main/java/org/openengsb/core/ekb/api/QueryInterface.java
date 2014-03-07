@@ -17,12 +17,12 @@
 
 package org.openengsb.core.ekb.api;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The query interface provides the functions to access the data stored in the EDB.
@@ -34,35 +34,49 @@ public interface QueryInterface {
      */
     <T> T getModel(Class<T> model, String oid);
 
+    <T> T getModel(Class<T> model, String oid, String stageId);
+
     /**
      * Loads the history (all saved versions) of the tool data from the given oid
      */
     <T> List<T> getModelHistory(Class<T> model, String oid);
+
+    <T> List<T> getModelHistory(Class<T> model, String oid, String stageId);
 
     /**
      * Loads the history (all saved versions) of the tool data from the given oid for the given time range
      */
     <T> List<T> getModelHistoryForTimeRange(Class<T> model, String oid, Long from, Long to);
 
+    <T> List<T> getModelHistoryForTimeRange(Class<T> model, String oid, Long from, Long to, String stageId);
+
     /**
      * Queries for models which are fitting to the parameters given by the query request object.
      */
     <T> List<T> query(Class<T> model, QueryRequest request);
 
+    <T> List<T> query(Class<T> model, QueryRequest request, String stageId);
+
     /**
      * Queries for models which are fitting to the parameters given by the query string.
      */
     <T> List<T> queryByString(Class<T> model, String query);
+
+    <T> List<T> queryByString(Class<T> model, String query, String stageId);
     
     /**
      * Queries for models which are fitting to the parameters given by the query string and the given timestamp.
      */
     <T> List<T> queryByStringAndTimestamp(Class<T> model, String query, String timestamp);
 
+    <T> List<T> queryByStringAndTimestamp(Class<T> model, String query, String timestamp, String stageId);
+
     /**
      * Queries for active models of the given model type. Active models mean models which are in the newest version.
      */
     <T> List<T> queryForActiveModels(Class<T> model);
+
+    <T> List<T> queryForActiveModels(Class<T> model, String stageId);
 
     /**
      * Parses the given query string and creates the fitting query request object for it. Throws an EKBException in case
@@ -74,19 +88,27 @@ public interface QueryInterface {
      * Returns the most recent revision number of the EDB
      */
     UUID getCurrentRevisionNumber();
+
+    UUID getCurrentRevisionNumber(String stageId);
     
     /**
      * Returns the revision of the last commit performed in the EDB under the given contextId.
      */
     UUID getLastRevisionNumberOfContext(String contextId);
 
+    UUID getLastRevisionNumberOfContext(String contextId, String stageId);
+
     /**
      * Returns a list of commit meta information of all commits which are matching the given request.
      */
     List<CommitMetaInfo> queryForCommits(CommitQueryRequest request) throws EKBException;
 
+    List<CommitMetaInfo> queryForCommits(CommitQueryRequest request, String stageId) throws EKBException;
+
     /**
      * Loads the EKBCommit object with the given revision from the data source.
      */
     EKBCommit loadCommit(String revision) throws EKBException;
+
+    EKBCommit loadCommit(String revision, String stageId) throws EKBException;
 }

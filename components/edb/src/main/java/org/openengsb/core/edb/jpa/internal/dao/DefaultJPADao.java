@@ -19,20 +19,6 @@ package org.openengsb.core.edb.jpa.internal.dao;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
@@ -43,6 +29,15 @@ import org.openengsb.core.edb.jpa.internal.JPAHead;
 import org.openengsb.core.edb.jpa.internal.JPAObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DefaultJPADao implements JPADao {
     protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultJPADao.class);
@@ -130,12 +125,12 @@ public class DefaultJPADao implements JPADao {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<JPAObject> getJPAObjectHistory(String oid, long from, long to) throws EDBException {
-        return this.getJPAObjectHistory(oid, null, from, to);
+        return this.getJPAObjectHistory(oid, from, to, null);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<JPAObject> getJPAObjectHistory(String oid, String sid, long from, long to) throws EDBException {
+    public List<JPAObject> getJPAObjectHistory(String oid, long from, long to, String sid) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading the history for the object {} from {} to {}", new Object[]{oid, from, to});
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -156,12 +151,12 @@ public class DefaultJPADao implements JPADao {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public JPAObject getJPAObject(String oid, long timestamp) throws EDBException {
-        return this.getJPAObject(oid, null, timestamp);
+        return this.getJPAObject(oid, timestamp, null);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public JPAObject getJPAObject(String oid, String sid, long timestamp) throws EDBException {
+    public JPAObject getJPAObject(String oid, long timestamp, String sid) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading object {} for the time {}", oid, timestamp);
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -201,7 +196,7 @@ public class DefaultJPADao implements JPADao {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public JPAObject getJPAObject(String oid, String sid) throws EDBException {
         LOGGER.debug("Loading newest object {} from stage {}", oid, sid);
-        return this.getJPAObject(oid, sid, System.currentTimeMillis());
+        return this.getJPAObject(oid, System.currentTimeMillis(), sid);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -241,12 +236,12 @@ public class DefaultJPADao implements JPADao {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<JPACommit> getJPACommit(String oid, long from, long to) throws EDBException {
-        return this.getJPACommit(oid, null, from, to);
+        return this.getJPACommit(oid, from, to, null);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<JPACommit> getJPACommit(String oid, String sid, long from, long to) throws EDBException {
+    public List<JPACommit> getJPACommit(String oid, long from, long to, String sid) throws EDBException {
         synchronized (entityManager) {
             LOGGER.debug("Loading all commits which involve object {} from {} to {}", new Object[]{oid, from, to});
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

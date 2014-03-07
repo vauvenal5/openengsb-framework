@@ -17,16 +17,7 @@
 
 package org.openengsb.core.edb.jpa.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import org.openengsb.core.edb.api.EDBCommit;
-import org.openengsb.core.edb.api.EDBException;
-import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EDBStage;
-import org.openengsb.core.edb.api.EngineeringDatabaseService;
+import org.openengsb.core.edb.api.*;
 import org.openengsb.core.edb.api.hooks.EDBBeginCommitHook;
 import org.openengsb.core.edb.api.hooks.EDBErrorHook;
 import org.openengsb.core.edb.api.hooks.EDBPostCommitHook;
@@ -35,6 +26,10 @@ import org.openengsb.core.edb.jpa.internal.util.EDBUtils;
 import org.osgi.service.blueprint.container.ServiceUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The AbstractEDBService is used to encapsulate the commit logic of the EDB.

@@ -17,28 +17,17 @@
 
 package org.openengsb.core.ekb.persistence.persist.edb;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.openengsb.core.api.context.ContextHolder;
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
-import org.openengsb.core.edb.api.EDBCommit;
-import org.openengsb.core.edb.api.EDBConstants;
-import org.openengsb.core.edb.api.EDBDiff;
-import org.openengsb.core.edb.api.EDBException;
-import org.openengsb.core.edb.api.EDBLogEntry;
-import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EDBStage;
-import org.openengsb.core.edb.api.EngineeringDatabaseService;
+import org.openengsb.core.edb.api.*;
 import org.openengsb.core.ekb.common.EDBConverterUtils;
 import org.openengsb.core.ekb.persistence.persist.edb.models.EngineeringObjectModel;
 import org.openengsb.core.ekb.persistence.persist.edb.models.SourceModelA;
 import org.openengsb.core.ekb.persistence.persist.edb.models.SourceModelB;
+
+import java.util.*;
 
 /**
  * The TestEngineeringDatabaseService is a simple implementation of the EngineeringDatabaseService for testing the
@@ -94,6 +83,11 @@ public class TestEngineeringDatabaseService implements EngineeringDatabaseServic
             edbObject.putEDBObjectEntry(EDBConstants.MODEL_TYPE, EngineeringObjectModel.class.getName());
             return edbObject;
         }
+        return null;
+    }
+
+    @Override
+    public EDBObject getObject(String oid, Long timestamp, String sid) throws EDBException {
         return null;
     }
 
@@ -330,6 +324,11 @@ public class TestEngineeringDatabaseService implements EngineeringDatabaseServic
 
     @Override
     public UUID getCurrentRevisionNumber(EDBStage stage) throws EDBException {
+        return null;
+    }
+
+    @Override
+    public UUID getCurrentRevisionNumber(String stageId) throws EDBException {
         return null;
     }
 

@@ -17,13 +17,13 @@
 
 package org.openengsb.core.edb.api;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.QueryRequest;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Defines the connection to the engineering database.
@@ -49,6 +49,8 @@ public interface EngineeringDatabaseService {
      * Retrieve the current state of the object with the specified OID for the given timestamp.
      */
     EDBObject getObject(String oid, Long timestamp) throws EDBException;
+
+    EDBObject getObject(String oid, Long timestamp, String sid) throws EDBException;
 
     /**
      * Retrieve the current state of the objects with the specified OIDs.
@@ -262,6 +264,8 @@ public interface EngineeringDatabaseService {
      * Returns the revision of the current state of the stage.
      */
     UUID getCurrentRevisionNumber(EDBStage stage) throws EDBException;
+
+    UUID getCurrentRevisionNumber(String stageId) throws EDBException;
 
     /**
      * Returns the revision of the last commit performed in the EDB under the given contextId.

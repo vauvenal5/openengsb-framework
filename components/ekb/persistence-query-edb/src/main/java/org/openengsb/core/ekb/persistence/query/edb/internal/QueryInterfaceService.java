@@ -17,29 +17,17 @@
 
 package org.openengsb.core.ekb.persistence.query.edb.internal;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.openengsb.core.api.model.CommitMetaInfo;
 import org.openengsb.core.api.model.CommitQueryRequest;
 import org.openengsb.core.api.model.ModelDescription;
 import org.openengsb.core.api.model.QueryRequest;
-import org.openengsb.core.edb.api.EDBCommit;
-import org.openengsb.core.edb.api.EDBConstants;
-import org.openengsb.core.edb.api.EDBException;
-import org.openengsb.core.edb.api.EDBObject;
-import org.openengsb.core.edb.api.EngineeringDatabaseService;
-import org.openengsb.core.ekb.api.EKBCommit;
-import org.openengsb.core.ekb.api.EKBException;
-import org.openengsb.core.ekb.api.ModelRegistry;
-import org.openengsb.core.ekb.api.QueryInterface;
-import org.openengsb.core.ekb.api.QueryParser;
+import org.openengsb.core.edb.api.*;
+import org.openengsb.core.ekb.api.*;
 import org.openengsb.core.ekb.common.EDBConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Implementation of the QueryInterface service. It's main responsibilities are the loading of elements from the EDB and
@@ -54,40 +42,70 @@ public class QueryInterfaceService implements QueryInterface {
 
     @Override
     public <T> T getModel(Class<T> model, String oid) {
+        return this.getModel(model, oid, null);
+    }
+
+    @Override
+    public <T> T getModel(Class<T> model, String oid, String stageId) {
         LOGGER.debug("Invoked getModel with the model {} and the oid {}", model.getName(), oid);
-        EDBObject object = edbService.getObject(oid);
+        EDBObject object = edbService.getObject(oid, stageId);
         return (T) edbConverter.convertEDBObjectToModel(model, object);
     }
 
     @Override
     public <T> List<T> getModelHistory(Class<T> model, String oid) {
+        return this.getModelHistory(model, oid, null);
+    }
+
+    @Override
+    public <T> List<T> getModelHistory(Class<T> model, String oid, String stageId) {
         LOGGER.debug("Invoked getModelHistory with the model {} and the oid {}", model.getName(), oid);
-        return (List<T>) edbConverter.convertEDBObjectsToModelObjects(model, edbService.getHistory(oid));
+        return (List<T>) edbConverter.convertEDBObjectsToModelObjects(model, edbService.getHistory(oid, stageId));
     }
 
     @Override
     public <T> List<T> getModelHistoryForTimeRange(Class<T> model, String oid, Long from, Long to) {
+        return this.getModelHistoryForTimeRange(model, oid, from, to, null);
+    }
+
+    @Override
+    public <T> List<T> getModelHistoryForTimeRange(Class<T> model, String oid, Long from, Long to, String stageId) {
         LOGGER.debug("Invoked getModelHistoryForTimeRange with the model {} and the oid {} for the "
                 + "time period of {} to {}", new Object[]{ model.getName(), oid, new Date(from).toString(),
-            new Date(to).toString() });
+                new Date(to).toString() });
         return (List<T>) edbConverter.convertEDBObjectsToModelObjects(model,
-            edbService.getHistoryForTimeRange(oid, from, to));
+                edbService.getHistoryForTimeRange(oid, from, to, stageId));
     }
 
     @Override
     public <T> List<T> query(Class<T> model, QueryRequest request) {
+       return this.query(model, request, null);
+    }
+
+    @Override
+    public <T> List<T> query(Class<T> model, QueryRequest request, String stageId) {
         LOGGER.debug("Query for model {} with the request {}", model.getName(), request);
         request.addParameter(EDBConstants.MODEL_TYPE, model.getName());
-        return (List<T>) edbConverter.convertEDBObjectsToModelObjects(model, edbService.query(request));
+        return (List<T>) edbConverter.convertEDBObjectsToModelObjects(model, edbService.query(request, stageId));
     }
 
     @Override
     public <T> List<T> queryByString(Class<T> model, String query) {
-        return query(model, parseQueryString(query));
+        return this.queryByString(model, query, null);
+    }
+
+    @Override
+    public <T> List<T> queryByString(Class<T> model, String query, String stageId) {
+        return query(model, parseQueryString(query), stageId);
     }
 
     @Override
     public <T> List<T> queryByStringAndTimestamp(Class<T> model, String query, String timestamp) {
+        return this.queryByStringAndTimestamp(model, query, timestamp, null);
+    }
+
+    @Override
+    public <T> List<T> queryByStringAndTimestamp(Class<T> model, String query, String timestamp, String stageId) {
         Long time;
         if (timestamp == null || timestamp.isEmpty()) {
             LOGGER.debug("Got invalid timestamp string. Use the current timestamp instead");
@@ -97,7 +115,7 @@ public class QueryInterfaceService implements QueryInterface {
         }
         QueryRequest request = parseQueryString(query);
         request.setTimestamp(time);
-        return query(model, request);
+        return query(model, request, stageId);
     }
 
     @Override
@@ -115,29 +133,54 @@ public class QueryInterfaceService implements QueryInterface {
 
     @Override
     public <T> List<T> queryForActiveModels(Class<T> model) {
+        return this.queryForActiveModels(model, null);
+    }
+
+    @Override
+    public <T> List<T> queryForActiveModels(Class<T> model, String stageId) {
         LOGGER.debug("Invoked queryForActiveModels with the model {}", model.getName());
-        return query(model, QueryRequest.create());
+        return query(model, QueryRequest.create(), stageId);
     }
 
     @Override
     public UUID getCurrentRevisionNumber() {
         return edbService.getCurrentRevisionNumber();
     }
-    
+
+    @Override
+    public UUID getCurrentRevisionNumber(String stageId) {
+        return edbService.getCurrentRevisionNumber(stageId);
+    }
+
     @Override
     public UUID getLastRevisionNumberOfContext(String contextId) {
-        return edbService.getLastRevisionNumberOfContext(contextId);
+        return this.getLastRevisionNumberOfContext(contextId, null);
+    }
+
+    @Override
+    public UUID getLastRevisionNumberOfContext(String contextId, String stageId) {
+        return edbService.getLastRevisionNumberOfContext(contextId, stageId);
     }
 
     @Override
     public List<CommitMetaInfo> queryForCommits(CommitQueryRequest request) throws EKBException {
-        return edbService.getRevisionsOfMatchingCommits(request);
+        return this.queryForCommits(request, null);
+    }
+
+    @Override
+    public List<CommitMetaInfo> queryForCommits(CommitQueryRequest request, String stageId) throws EKBException {
+        return edbService.getRevisionsOfMatchingCommits(request, stageId);
     }
 
     @Override
     public EKBCommit loadCommit(String revision) throws EKBException {
+        return this.loadCommit(revision, null);
+    }
+
+    @Override
+    public EKBCommit loadCommit(String revision, String stageId) throws EKBException {
         try {
-            EDBCommit commit = edbService.getCommitByRevision(revision);
+            EDBCommit commit = edbService.getCommitByRevision(revision, stageId);
             return convertEDBCommitToEKBCommit(commit);
         } catch (EDBException e) {
             throw new EKBException("There is no commit with the revision " + revision);
@@ -156,6 +199,13 @@ public class QueryInterfaceService implements QueryInterface {
         result.setDomainId(commit.getDomainId());
         result.setConnectorId(commit.getConnectorId());
         result.setInstanceId(commit.getInstanceId());
+
+        EDBStage stage = commit.getEDBStage();
+        if(stage != null)
+        {
+            result.setStageId(stage.getStageId());
+        }
+
         for (EDBObject insert : commit.getInserts()) {
             result.addInsert(createModelOfEDBObject(insert, cache));
         }
@@ -163,7 +213,7 @@ public class QueryInterfaceService implements QueryInterface {
             result.addUpdate(createModelOfEDBObject(update, cache));
         }
         for (String delete : commit.getDeletions()) {
-            EDBObject object = edbService.getObject(delete, commit.getTimestamp());
+            EDBObject object = edbService.getObject(delete, commit.getTimestamp(), result.getStageId());
             result.addDelete(createModelOfEDBObject(object, cache));
         }
         return result;
