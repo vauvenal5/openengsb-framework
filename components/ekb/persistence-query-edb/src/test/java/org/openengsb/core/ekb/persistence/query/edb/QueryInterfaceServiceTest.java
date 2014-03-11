@@ -17,20 +17,6 @@
 
 package org.openengsb.core.ekb.persistence.query.edb;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openengsb.core.api.model.ModelWrapper;
@@ -48,6 +34,17 @@ import org.openengsb.core.ekb.persistence.query.edb.models.TestModel;
 import org.openengsb.core.ekb.persistence.query.edb.models.TestModel2;
 import org.openengsb.core.ekb.persistence.query.edb.models.TestModel2.ENUM;
 import org.openengsb.core.util.ModelUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class QueryInterfaceServiceTest {
     private QueryInterfaceService service;
@@ -116,9 +113,9 @@ public class QueryInterfaceServiceTest {
         when(edbService.getObject(eq("suboid1"), anyLong())).thenReturn(subObject1);
         when(edbService.getObject(eq("suboid2"), anyLong())).thenReturn(subObject2);
         when(edbService.getObject(eq("suboid3"), anyLong())).thenReturn(subObject3);
-        when(edbService.getObject("testoid")).thenReturn(edbObject);
-        when(edbService.getObject("testoidimpl")).thenReturn(edbObjectImpl);
-        when(edbService.getObject("mapoid")).thenReturn(mapTest);
+        when(edbService.getObject("testoid", (String)null)).thenReturn(edbObject);
+        when(edbService.getObject("testoidimpl", (String)null)).thenReturn(edbObjectImpl);
+        when(edbService.getObject("mapoid", (String)null)).thenReturn(mapTest);
         when(edbService.getObject("suboid1")).thenReturn(subObject1);
         when(edbService.getObject("suboid2")).thenReturn(subObject2);
         when(edbService.getObject("suboid3")).thenReturn(subObject3);
@@ -140,7 +137,7 @@ public class QueryInterfaceServiceTest {
     @Test
     public void testGetOpenEngSBModelGeneral_shouldWork() throws Exception {
         TestModel model = service.getModel(TestModel.class, "testoid");
-        TestModel model2 = ModelUtils.createModel(TestModel.class, 
+        TestModel model2 = ModelUtils.createModel(TestModel.class,
             ModelWrapper.wrap(model).toOpenEngSBModelEntries());
 
         assertThat(model.getId().equals(model2.getId()), is(true));
